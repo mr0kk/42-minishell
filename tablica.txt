@@ -1,3 +1,13 @@
 TABLICA OGLOSZEN
 
 przyklad: https://github.com/mcombeau/minishell
+
+Sparwdzenie synataxu:
+Your shell must implement the following built-in commands:
+KAMIL ◦ echo with option -n
+KAMIL ◦ cd with only a relative or absolute path
+KAMIL ◦ pwd with no options
+ADAM ◦ export with no options
+ADAM ◦ unset with no options
+ADAM ◦ env with no options or arguments
+ADAM ◦ exit with no options
