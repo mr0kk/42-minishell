@@ -2,7 +2,7 @@
 
 int main()
 {
-	printf("works!\n");
+	ft_printf("works!\n");
 
 	return (0);
 }
