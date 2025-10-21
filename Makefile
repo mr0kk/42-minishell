@@ -8,7 +8,8 @@ LIBFT_DIR = libft
 LIBFT_LIB = -L$(LIBFT_DIR) -lft
 
 NAME = minishell
-SRCS = $(SRC_DIR)/main.c
+SRCS = $(SRC_DIR)/main.c \
+		$(SRC_DIR)/handle_input.c
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -24,7 +25,7 @@ $(LIBFT_DIR)/libft.a:
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT_LIB) -lreadline
 
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
@@ -37,4 +38,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-
