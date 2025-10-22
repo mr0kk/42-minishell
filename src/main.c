@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/22 20:47:27 by rmrok             #+#    #+#             */
+/*   Updated: 2025/10/22 20:47:28 by rmrok            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	input_check(t_data *data, int argc, char **argv)
@@ -26,8 +38,7 @@ void	minishell_interactive(t_data *data)
 			free_data(data);
 			break;
 		}
-		parser("dupa");
-		printf("%s\n", data->user_input);
+		parser(data);
 		free(data->user_input);
 	}
 }

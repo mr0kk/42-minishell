@@ -21,6 +21,6 @@ typedef struct s_data
 	functions
 */
 int	input_valid(t_data *data, int argc, char **argv);
-void	parser(char *str);
+void	parser(t_data *data);
 
 #endif
