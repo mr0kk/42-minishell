@@ -7,11 +7,11 @@ SRC_PATH = ./src/
 OBJ_PATH = ./obj/
 INC_PATH = ./include/
 
-SRC = main.c 
-# 		parsing/parsing.c
+SRC = main.c \
+		parsing/parsing.c
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))
-OBJS    = $(SRC:.c=.o)
+OBJ    = $(SRC:.c=.o)
 OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
 INC		= -I $(INC_PATH) -I $(LIBFT_PATH)
 
@@ -23,18 +23,19 @@ all: $(OBJ_PATH) $(LIBFT) $(NAME)
 $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)%.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $@ $(INC) $(LIBFT) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(INC) $(LIBFT) -lreadline
 
 $(LIBFT):
-	make -C $(LIBFT_PATH)
+	$(MAKE) -C $(LIBFT_PATH)
 
 clean:
 	rm -rf $(OBJ_PATH)
-	make -C $(LIBFT_PATH) clean
+	$(MAKE) -C $(LIBFT_PATH) clean
 
 fclean: clean
 	rm -f $(NAME)

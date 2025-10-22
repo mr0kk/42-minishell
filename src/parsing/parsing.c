@@ -1,6 +1,6 @@
-#include "../../include/minishell.h"
+#include "minishell.h"
 
-void	parsel(char *str)
+void	parser(char *str)
 {
 	printf("%s\n", str);
 }

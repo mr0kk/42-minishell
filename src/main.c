@@ -26,7 +26,7 @@ void	minishell_interactive(t_data *data)
 			free_data(data);
 			break;
 		}
-		// parser("dupa");
+		parser("dupa");
 		printf("%s\n", data->user_input);
 		free(data->user_input);
 	}
