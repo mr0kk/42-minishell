@@ -1,4 +1,15 @@
-#include "../include/minishell.h"
+#include "minishell.h"
+
+int	input_check(t_data *data, int argc, char **argv)
+{
+	if (argc == 1)
+		data->interative = 1;
+	else if (argc == 3)
+		data->interative = 0;
+	else
+		return (0);
+	return (1);
+}	
 
 void	free_data(t_data *data)
 {
@@ -15,6 +26,7 @@ void	minishell_interactive(t_data *data)
 			free_data(data);
 			break;
 		}
+		// parser("dupa");
 		printf("%s\n", data->user_input);
 		free(data->user_input);
 	}
@@ -27,7 +39,7 @@ void	minishell_noninteractive()
 
 void	exit_shell()
 {
-	printf("exit shell\n");
+	printf("wrong usage\n");
 	exit(1);
 }
 
@@ -35,12 +47,11 @@ int main(int argc, char *argv[], char *env[])
 {
 	t_data	data;
 
-	if (!input_valid(&data, argc, argv))
+	if (!input_check(&data, argc, argv))
 		exit_shell();
 	if (data.interative)
 		minishell_interactive(&data);
 	else
 		minishell_noninteractive();
-	
 	return (0);
 }

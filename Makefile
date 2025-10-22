@@ -1,39 +1,44 @@
-CC = cc
-CFLAGS = -I$(INC_DIR) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
-
-SRC_DIR = src
-OBJ_DIR = obj
-LIBFT_DIR = libft
-
-LIBFT_LIB = -L$(LIBFT_DIR) -lft
-
 NAME = minishell
-SRCS = $(SRC_DIR)/main.c \
-		$(SRC_DIR)/handle_input.c
 
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+CC = cc
+CFLAGS = #-Wall -Wextra -Werror
 
-all: $(LIBFT_DIR)/libft.a $(NAME)
+SRC_PATH = ./src/
+OBJ_PATH = ./obj/
+INC_PATH = ./include/
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+SRC = main.c 
+# 		parsing/parsing.c
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+SRCS   = $(addprefix $(SRC_PATH), $(SRC))
+OBJS    = $(SRC:.c=.o)
+OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
+INC		= -I $(INC_PATH) -I $(LIBFT_PATH)
 
-$(LIBFT_DIR)/libft.a:
-	$(MAKE) -C $(LIBFT_DIR)
+LIBFT_PATH = ./libft/
+LIBFT = ./libft/libft.a
+
+all: $(OBJ_PATH) $(LIBFT) $(NAME)
+
+$(OBJ_PATH):
+	mkdir -p $(OBJ_PATH)
+
+$(OBJ_PATH)/%.o: $(SRC_PATH)%.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT_LIB) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $@ $(INC) $(LIBFT) -lreadline
+
+$(LIBFT):
+	make -C $(LIBFT_PATH)
 
 clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_PATH)
+	make -C $(LIBFT_PATH) clean
 
 fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_PATH) fclean
 
 re: fclean all
 
