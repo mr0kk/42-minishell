@@ -16,14 +16,40 @@ void	free_table(char **tab)
 {
 	int	i;
 
-	i = 0; 
+	i = 0;
+	while (tab[i])
+		free(tab[i++]);
+	free(tab);
 }
 
-void	parser(t_data *data)
+char	**tokenization(char *input)
+{
+	char	**instructions;
+	char	*holder;
+	int		i;
+
+	instructions = ft_split(input, ' ');
+	i = 0;
+	while (instructions[i])
+	{
+		holder = ft_strtrim(instructions[i], " \t");
+		free(instructions[i]);
+		instructions[i] = holder;
+		i++;
+	}
+	return (instructions);
+}
+
+void	input_handler(t_data *data)
 {
 	char	**instructions;
 
-	printf("%s\n", data->user_input);
-	instructions = ft_split(data->user_input, ' ');
-	
+	instructions = tokenization(data->user_input);
+	int i = 0;
+	while (instructions[i])
+	{
+		printf("%s\n", instructions[i]);
+		i++;
+	}
+	free_table(instructions);
 }

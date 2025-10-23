@@ -38,7 +38,7 @@ void	minishell_interactive(t_data *data)
 			free_data(data);
 			break;
 		}
-		parser(data);
+		input_handler(data);
 		free(data->user_input);
 	}
 }
