@@ -30,7 +30,14 @@ typedef struct s_token
 */
 int	input_valid(t_data *data, int argc, char **argv);
 void	input_handler(t_data *data);
-char	**ft_strtok(char *str);
+
+
+/*
+	nodes handling
+*/
+t_token	*create_node(char *text);
+void	add_node(t_token **head, char *text);
+void	free_tokens(t_token **head);
 
 /*
 	commands
@@ -40,6 +47,8 @@ void	ft_echo(char **tab);
 /*
 	utilities functions
 */
-void	print_tokens(char **instructions);
+void	print_tokens(t_token *head);
+bool	is_separator(char c);
+
 
 #endif
