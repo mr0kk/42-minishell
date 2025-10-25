@@ -42,7 +42,7 @@ void	free_tokens(t_token **head);
 /*
 	commands
 */
-void	ft_echo(char **tab);
+void	ft_echo(t_token *head);
 
 /*
 	utilities functions

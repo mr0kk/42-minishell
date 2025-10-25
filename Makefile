@@ -10,7 +10,8 @@ INC_PATH = ./include/
 SRC = main.c \
 		parsing/parsing.c \
 		parsing/nodes_handling.c \
-		utils/utils.c 
+		utils/utils.c \
+		commands/ft_echo.c
 
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))
