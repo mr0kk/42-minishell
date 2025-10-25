@@ -9,3 +9,5 @@ ABSTRACT SYNTAX TREE
 HEREDOC
 < > << >> | $ $?
 
+25.10.2025
+  - komenda echo i echo -n działa
