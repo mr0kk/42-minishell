@@ -36,7 +36,7 @@ void	minishell_interactive(t_data *data)
 		data->user_input = readline("minishell$ ");
 		if (!ft_strncmp(data->user_input, "exit", 5))
 		{
-			free_data(data);
+			free(data->user_input);
 			break;
 		}
 		input_handler(data);

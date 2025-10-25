@@ -9,8 +9,8 @@ INC_PATH = ./include/
 
 SRC = main.c \
 		parsing/parsing.c \
-		utils/printing.c \
-		commands/ft_echo.c
+# 		utils/printing.c 
+
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))
 OBJ    = $(SRC:.c=.o)
