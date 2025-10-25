@@ -23,4 +23,14 @@ typedef struct s_data
 int	input_valid(t_data *data, int argc, char **argv);
 void	input_handler(t_data *data);
 
+/*
+	commands
+*/
+void	ft_echo(char **tab);
+
+/*
+	utilities functions
+*/
+void	print_tokens(char **instructions);
+
 #endif

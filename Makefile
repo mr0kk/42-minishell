@@ -8,7 +8,9 @@ OBJ_PATH = ./obj/
 INC_PATH = ./include/
 
 SRC = main.c \
-		parsing/parsing.c
+		parsing/parsing.c \
+		utils/printing.c \
+		commands/ft_echo.c
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))
 OBJ    = $(SRC:.c=.o)
@@ -18,10 +20,19 @@ INC		= -I $(INC_PATH) -I $(LIBFT_PATH)
 LIBFT_PATH = ./libft/
 LIBFT = ./libft/libft.a
 
+GREEN = \033[0;32m
+RED = \033[0;31m
+BLUE = \033[0;34m
+NC = \033[0m
+
 all: $(OBJ_PATH) $(LIBFT) $(NAME)
 
 $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)
+	mkdir -p $(OBJ_PATH)/parsing
+	mkdir -p $(OBJ_PATH)/utils
+	mkdir -p $(OBJ_PATH)/commands
+	@echo "$(BLUE)Created object directories$(NC)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	mkdir -p $(dir $@)
@@ -36,10 +47,12 @@ $(LIBFT):
 clean:
 	rm -rf $(OBJ_PATH)
 	$(MAKE) -C $(LIBFT_PATH) clean
+	@echo "$(RED)Object files cleaned$(NC)"
 
 fclean: clean
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_PATH) fclean
+	@echo "$(RED)Executable cleaned$(NC)"
 
 re: fclean all
 

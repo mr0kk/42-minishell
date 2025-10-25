@@ -45,11 +45,9 @@ void	input_handler(t_data *data)
 	char	**instructions;
 
 	instructions = tokenization(data->user_input);
-	int i = 0;
-	while (instructions[i])
-	{
-		printf("%s\n", instructions[i]);
-		i++;
-	}
+	if (!ft_strncmp(instructions[0], "echo", 5))
+		ft_echo(instructions + 1);
+	
+	// print_tokens(instructions);
 	free_table(instructions);
 }
