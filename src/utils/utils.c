@@ -7,7 +7,7 @@ void	print_tokens(t_token *head)
 	current = head;
 	while (current)
     {
-        printf("%s\n", current->token);
+        printf("%s\ttype: %d\n", current->token, current->type);
         current = current->next;
     }
 }

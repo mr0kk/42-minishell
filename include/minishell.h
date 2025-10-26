@@ -17,19 +17,32 @@ typedef struct s_data
 	char	*user_input;
 }	t_data;
 
+typedef enum e_token_type
+{
+	CMD,
+	ARG,
+	PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	FILE_TOKEN,
+	UNKNOWN
+}	t_token_type;
+
 typedef struct s_token
 {
 	size_t	token_len;
 	char	*token;
+	t_token_type	type;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
 
 /*
-	functions
+	parsing
 */
-int	input_valid(t_data *data, int argc, char **argv);
+int		input_valid(t_data *data, int argc, char **argv);
 void	input_handler(t_data *data);
+void	define_tokens_type(t_token *head);
 
 
 /*

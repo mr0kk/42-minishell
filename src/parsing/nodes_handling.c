@@ -30,6 +30,7 @@ t_token	*create_node(char *text)
 	new_node->next = NULL;
 	new_node->token = ft_strdup(text);
 	new_node->token_len = ft_strlen(text);
+	new_node->type = UNKNOWN;
 	return (new_node);
 }
 
