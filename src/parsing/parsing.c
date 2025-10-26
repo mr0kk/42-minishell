@@ -71,10 +71,8 @@ void	input_handler(t_data *data)
 	t_token *head;
 	
 	head = read_tokens(data->user_input);
-	printf("here\n");
 	define_tokens_type(head);
-	printf("tu jest git\n");
-	print_tokens(head);
+	// print_tokens(head);
 	if (!ft_strncmp(head->token, "echo", 5))
 		ft_echo(head);
 	free_tokens(&head);

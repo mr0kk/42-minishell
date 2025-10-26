@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 void	classify_token(t_token *token)
 {
 	if (!ft_strncmp(token->token, "|", 2))
@@ -17,13 +16,11 @@ void	classify_token(t_token *token)
 		token->type = ARG;
 }
 
-
 void	define_tokens_type(t_token *head)
 {
 	t_token	*tmp;
 
 	tmp = head;
-
 	while (tmp)
     {
         classify_token(tmp);
