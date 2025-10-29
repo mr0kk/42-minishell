@@ -7,6 +7,9 @@
 #include <time.h>
 #include <stdbool.h>
 #include <readline/readline.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 /*
 	structures
@@ -41,7 +44,7 @@ typedef struct s_token
 	parsing
 */
 int		input_valid(t_data *data, int argc, char **argv);
-void	input_handler(t_data *data);
+void	input_handler(t_data *data, char **envp);
 void	define_tokens_type(t_token *head);
 
 
@@ -58,10 +61,16 @@ void	free_tokens(t_token **head);
 void	ft_echo(t_token *head);
 
 /*
+	pipes
+*/
+void	pipes(char **cmds, char **ep);
+
+/*
 	utilities functions
 */
 void	print_tokens(t_token *head);
 bool	is_separator(char c);
+void	check_for_pipe(t_token *head, char **envp);
 
 
 #endif

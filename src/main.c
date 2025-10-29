@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/22 20:47:27 by rmrok             #+#    #+#             */
-/*   Updated: 2025/10/22 20:47:28 by rmrok            ###   ########.fr       */
+/*   Created: 2025/10/29 19:39:07 by rmrok             #+#    #+#             */
+/*   Updated: 2025/10/29 19:39:08 by rmrok            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_data(t_data *data)
 		free(data->user_input);
 }
 
-void	minishell_interactive(t_data *data)
+void	minishell_interactive(t_data *data, char **envp)
 {
 	while (1)
 	{
@@ -39,7 +39,7 @@ void	minishell_interactive(t_data *data)
 			free(data->user_input);
 			break;
 		}
-		input_handler(data);
+		input_handler(data, envp);
 		free(data->user_input);
 	}
 }
@@ -55,14 +55,14 @@ void	exit_shell()
 	exit(1);
 }
 
-int main(int argc, char *argv[], char *env[])
+int main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
 	if (!input_check(&data, argc, argv))
 		exit_shell();
 	if (data.interative)
-		minishell_interactive(&data);
+		minishell_interactive(&data, envp);
 	else
 		minishell_noninteractive();
 	return (0);

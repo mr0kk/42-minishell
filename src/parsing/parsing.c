@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/22 20:47:29 by rmrok             #+#    #+#             */
-/*   Updated: 2025/10/22 21:55:14 by rmrok            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 void	skip_separators(char *input, int *index)
@@ -66,14 +54,16 @@ t_token *read_tokens(char *input)
 	return (head);
 }
 
-void	input_handler(t_data *data)
+void	input_handler(t_data *data, char **envp)
 {
 	t_token *head;
 	
 	head = read_tokens(data->user_input);
 	define_tokens_type(head);
-	// print_tokens(head);
+	print_tokens(head);
+	// check_for_pipe(head, envp);
 	if (!ft_strncmp(head->token, "echo", 5))
 		ft_echo(head);
+	
 	free_tokens(&head);
 }
