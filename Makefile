@@ -13,7 +13,8 @@ SRC = main.c \
 		parsing/type_defining.c \
 		utils/utils.c \
 		commands/ft_echo.c \
-		pipes/pipes.c
+		pipes/pipes.c \
+		errors/syntax_handling.c
 
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))
@@ -37,6 +38,7 @@ $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)/utils
 	mkdir -p $(OBJ_PATH)/commands
 	mkdir -p $(OBJ_PATH)/pipes
+	mkdir -p $(OBJ_PATH)/errors
 	@echo "$(BLUE)Created object directories$(NC)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c

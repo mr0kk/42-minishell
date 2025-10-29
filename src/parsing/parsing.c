@@ -60,10 +60,11 @@ void	input_handler(t_data *data, char **envp)
 	
 	head = read_tokens(data->user_input);
 	define_tokens_type(head);
+	check_syntax(head);
 	print_tokens(head);
 	// check_for_pipe(head, envp);
-	if (!ft_strncmp(head->token, "echo", 5))
-		ft_echo(head);
+	// if (!ft_strncmp(head->token, "echo", 5))
+	// 	ft_echo(head);
 	
 	free_tokens(&head);
 }

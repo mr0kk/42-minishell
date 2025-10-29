@@ -66,6 +66,11 @@ void	ft_echo(t_token *head);
 void	pipes(char **cmds, char **ep);
 
 /*
+	errors
+*/
+void	check_syntax(t_token *head);
+
+/*
 	utilities functions
 */
 void	print_tokens(t_token *head);
