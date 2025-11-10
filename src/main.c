@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+
+/*
+	This function checks amount of arguments given when program starts
+	For none args sets to run interactive minshell 
+	in case of 3 args sets to run noninteractive minishell
+	otherwise gives usegage error
+*/
 int	input_check(t_data *data, int argc, char **argv)
 {
 	if (argc == 1)
@@ -29,6 +36,12 @@ void	free_data(t_data *data)
 		free(data->user_input);
 }
 
+
+/*
+	runs interactiove verstion of minishell
+	func handle instruction given in input line then frees
+	memory after proceding input
+*/
 void	minishell_interactive(t_data *data, char **envp)
 {
 	while (1)
@@ -55,12 +68,26 @@ void	exit_shell()
 	exit(1);
 }
 
+void	print_env(char	*env[])
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		printf("%s\n\n", env[i]);
+		i++;
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
+
+	// print_env(envp);
 	if (!input_check(&data, argc, argv))
-		exit_shell();
+		exit_shell(); // add usage error handling
 	if (data.interative)
 		minishell_interactive(&data, envp);
 	else

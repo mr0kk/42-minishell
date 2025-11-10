@@ -40,13 +40,15 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+
+void	exit_shell();
 /*
 	parsing
 */
 int		input_valid(t_data *data, int argc, char **argv);
 void	input_handler(t_data *data, char **envp);
 void	define_tokens_type(t_token *head);
-
+void	expand_variables(t_token *head, char **envp);
 
 /*
 	nodes handling
@@ -68,13 +70,15 @@ void	pipes(char **cmds, char **ep);
 /*
 	errors
 */
-void	check_syntax(t_token *head);
+bool	syntax_error(t_token *head);
+bool	exit_syntax_error(char *s);
 
 /*
 	utilities functions
 */
 void	print_tokens(t_token *head);
 bool	is_separator(char c);
+int		is_dolar(char *s);
 void	check_for_pipe(t_token *head, char **envp);
 
 

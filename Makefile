@@ -11,10 +11,12 @@ SRC = main.c \
 		parsing/parsing.c \
 		parsing/nodes_handling.c \
 		parsing/type_defining.c \
+		parsing/variable_expansion.c \
 		utils/utils.c \
 		commands/ft_echo.c \
 		pipes/pipes.c \
-		errors/syntax_handling.c
+		errors/syntax_handling.c \
+		errors/error_messages.c
 
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))

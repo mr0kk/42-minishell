@@ -34,3 +34,20 @@ bool	is_separator(char c)
 {
 	return (c == ' ' || c == '\t');
 }
+
+/*
+	return $ index or NULL
+*/
+int	is_dolar(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == 36 && ft_isalpha(s[i + 1]) )  // 36 -> dolar sign
+			return (i);
+		i++;
+	}
+	return (-1);
+}
