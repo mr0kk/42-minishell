@@ -90,7 +90,7 @@ void	expand_variables(t_token *head, char **envp)
 		{
 			s = replace_var(current->token, (size_t)(is_dolar(current->token)), envp);
 			if (!s)
-				exit_shell(); // do poprawy
+				exit_shell(); // do poprawy gdy error handling 
 			free(current->token);
 			current->token = s;
 		}
