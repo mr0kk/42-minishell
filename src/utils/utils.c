@@ -36,7 +36,9 @@ bool	is_separator(char c)
 }
 
 /*
-	return $ index or NULL
+	if there is $ sign in token
+	return $ index 
+	or NULL when not
 */
 int	is_dolar(char *s)
 {

@@ -16,6 +16,10 @@ void	classify_token(t_token *token)
 		token->type = ARG;
 }
 
+/*
+	function assigns each token in the linked list 
+	token type
+*/
 void	define_tokens_type(t_token *head)
 {
 	t_token	*tmp;

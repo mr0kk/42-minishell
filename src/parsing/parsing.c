@@ -1,11 +1,20 @@
 #include "minishell.h"
 
+
+/*
+	function iterates throught separators to skip them
+*/
 void	skip_separators(char *input, int *index)
 {
 	while (input[*index] && is_separator(input[*index]))
 		(*index)++;
 }
 
+/*
+	function separates first met token from given string
+	and updates index variable for next index after token
+	return token string
+*/
 char	*read_token(char *input, int *index)
 {
 	int		start;
@@ -34,7 +43,11 @@ char	*read_token(char *input, int *index)
 		return (NULL);
 	return (ft_substr(input, start, *index - start));
 }
-
+/*
+	function takes input string and separetes it 
+	creating tokens
+	returns head element of linked list
+*/
 t_token *read_tokens(char *input)
 {
 	char	*token;

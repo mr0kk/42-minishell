@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/*
+	function separation variable name 
+	and returns it as a string
+*/
 char	*get_var_name(char *s, size_t d_index)
 {
 	char	*var_name;
@@ -20,6 +24,11 @@ char	*get_var_name(char *s, size_t d_index)
 	return (var_name);
 }
 
+/*
+	interating throuht envp[] looking for given variable name
+	when variable exist returns its string value 
+	empty string otherwise
+*/
 char	*find_var_value(char *var_name, char *envp[])
 {
 	size_t	i;
@@ -34,6 +43,9 @@ char	*find_var_value(char *var_name, char *envp[])
 	return (ft_strdup(""));
 }
 
+/*
+	creates new string with replaced variable name by its value
+*/
 char	*create_exp_str(char *old_s, char *var_name, char *var_value, size_t d_index)
 {
 	size_t	i;
@@ -58,6 +70,10 @@ char	*create_exp_str(char *old_s, char *var_name, char *var_value, size_t d_inde
 	return (new_s);
 }
 
+/*
+	function takes token with $ in it
+	and returns new one with expaned variable
+*/
 char	*replace_var(char *s, size_t d_index, char *envp[])
 {
 	char	*new_s;
@@ -78,6 +94,10 @@ char	*replace_var(char *s, size_t d_index, char *envp[])
 	return (new_s);
 }
 
+/*
+	function replacing envariamental variabes with its values
+	and changing given tokens linked list
+*/
 void	expand_variables(t_token *head, char **envp)
 {
 	t_token	*current;
