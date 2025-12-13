@@ -36,20 +36,40 @@ bool	is_separator(char c)
 }
 
 /*
-	if there is $ sign in token
-	return $ index 
-	or NULL when not
+	helper function for freeing stings
 */
-int	is_dolar(char *s)
+char	*free_vars(char	*a, char *b, char *c)
 {
-	int	i;
+	if (a)
+		free(a);
+	if (b)
+		free(b);
+	if (c)
+		free(c);
+	return (NULL);
+}
 
-	i = 0;
-	while (s[i])
+/*
+	function update quotes status 
+	depending if any quote is open or not
+*/
+void	update_quote_state(char c, t_quote_state *state)
+{
+	if (*state == OUTSIDE)
 	{
-		if (s[i] == 36 && ft_isalpha(s[i + 1]) )  // 36 -> dolar sign
-			return (i);
-		i++;
+		if (c == '\'')
+			*state = IN_SINGLE;
+		else if (c == '\"')
+			*state = IN_DOUBLE;
 	}
-	return (-1);
+	else if (*state == IN_SINGLE)
+	{
+		if (c == '\'')
+            *state = OUTSIDE;
+	}
+	else if (*state == IN_DOUBLE)
+	{
+		if (c == '\"')
+			*state = OUTSIDE;
+	}
 }

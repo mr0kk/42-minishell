@@ -47,6 +47,13 @@ void	minishell_interactive(t_data *data, char **envp)
 	while (1)
 	{
 		data->user_input = readline("minishell$ ");
+		if (!data->user_input)
+		{
+			free(data->user_input);
+			break;
+		}
+		if (data->user_input[0] != '\0')
+			add_history(data->user_input);
 		if (!ft_strncmp(data->user_input, "exit", 5))
 		{
 			free(data->user_input);
@@ -60,12 +67,6 @@ void	minishell_interactive(t_data *data, char **envp)
 void	minishell_noninteractive()
 {
 	printf("noninteractive in progress\n");
-}
-
-void	exit_shell()
-{
-	printf("wrong usage\n");
-	exit(1);
 }
 
 void	print_env(char	*env[])
@@ -87,10 +88,11 @@ int main(int argc, char **argv, char **envp)
 
 	// print_env(envp);
 	if (!input_check(&data, argc, argv))
-		exit_shell(); // add usage error handling
+		exit_shell("Wrong usage"); // add usage error handling
 	if (data.interative)
 		minishell_interactive(&data, envp);
 	else
 		minishell_noninteractive();
+	rl_clear_history();
 	return (0);
 }

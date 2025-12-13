@@ -16,7 +16,8 @@ SRC = main.c \
 		commands/ft_echo.c \
 		pipes/pipes.c \
 		errors/syntax_handling.c \
-		errors/error_messages.c
+		errors/error_handling.c \
+		errors/error_messages.c 
 
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))

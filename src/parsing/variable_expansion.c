@@ -70,50 +70,97 @@ char	*create_exp_str(char *old_s, char *var_name, char *var_value, size_t d_inde
 	return (new_s);
 }
 
+
 /*
-	function takes token with $ in it
+	function takes token with $ in it and its index
 	and returns new one with expaned variable
 */
-char	*replace_var(char *s, size_t d_index, char *envp[])
+char	*replace_var(char *s, size_t *d_index, char *envp[])
 {
 	char	*new_s;
 	char	*var_name;
 	char	*var_value;
 	size_t	i;
 
-	i = d_index;
-	var_name = get_var_name(s, d_index);
+	i = *d_index;
+	var_name = get_var_name(s, *d_index);
 	if (!var_name)
-		return (NULL);
+		return (free_vars(var_name, NULL, NULL));
 	var_value = find_var_value(var_name, envp);
 	if (!var_value)
-		return (NULL);
-	new_s = create_exp_str(s, var_name, var_value, d_index);
-	free(var_name);
-	free(var_value);
+		return (free_vars(var_value, NULL, NULL));
+	new_s = create_exp_str(s, var_name, var_value, *d_index);
+	if (!new_s)
+		return (free_vars(var_name, var_value, NULL));
+	*d_index += ft_strlen(var_value);
+	free_vars(var_name, var_value, NULL);
 	return (new_s);
+}
+
+bool	handle_expansion(char *token_s, t_quote_state *state, char **envp)
+{
+	char	*new_token;
+	size_t	i;
+
+	i = 0;
+	*state = OUTSIDE;
+	while (token_s[i])
+	{
+		update_quote_state(token_s[i], state);
+		if (token_s[i] == 36 && ft_isalpha(token_s[i + 1]) && *state != IN_SINGLE)
+		{
+			new_token = replace_var(token_s, &i, envp);
+			if (!new_token)
+			{
+				error_message("Memory allocation error");
+				return (1);
+			}
+			free(token_s);
+			token_s = new_token;
+		}
+		else
+			i++;
+	}
+	if (quote_error(state))
+		return (1);
+	return (0);
 }
 
 /*
 	function replacing envariamental variabes with its values
 	and changing given tokens linked list
 */
-void	expand_variables(t_token *head, char **envp)
+bool	expand_variables(t_token *head, char **envp)
 {
 	t_token	*current;
+	t_quote_state state;
 	char	*s;
+	size_t	i;
 
 	current = head;
 	while (current)
 	{
-		while (is_dolar(current->token) >= 0)
+		i = 0;
+		state = OUTSIDE;
+		while (current->token[i])
 		{
-			s = replace_var(current->token, (size_t)(is_dolar(current->token)), envp);
-			if (!s)
-				exit_shell(); // do poprawy gdy error handling 
-			free(current->token);
-			current->token = s;
+			update_quote_state(current->token[i], &state);
+			if (current->token[i] == 36 && ft_isalpha(current->token[i + 1]) && state != IN_SINGLE)
+			{
+				s = replace_var(current->token, &i, envp);
+				if (!s)
+				{
+					error_message("Memory allocation error");
+					return (1);
+				}
+				free(current->token);
+				current->token = s;
+			}
+			else
+				i++;
 		}
+		if (quote_error(&state))
+			return (1);
 		current = current->next;
 	}
 }

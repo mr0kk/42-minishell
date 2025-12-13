@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 /*
 	function iterates throught separators to skip them
 */
@@ -73,14 +72,12 @@ void	input_handler(t_data *data, char **envp)
 	
 	head = read_tokens(data->user_input);
 	define_tokens_type(head);
-	
 	if (syntax_error(head))
-	{
-		free_tokens(&head);
-		return ;
-	}
-	expand_variables(head, envp);
+		return (free_tokens(&head));
+	if (expand_variables(head, envp))
+		return (free_tokens(&head));
 	print_tokens(head);
+
 	// check_for_pipe(head, envp);
 	// if (!ft_strncmp(head->token, "echo", 5))
 	// 	ft_echo(head);

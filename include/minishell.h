@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <readline/history.h>
 
 /*
 	structures
@@ -19,6 +20,13 @@ typedef struct s_data
 	bool	interative;
 	char	*user_input;
 }	t_data;
+
+typedef enum e_quote_state
+{
+	OUTSIDE,
+	IN_SINGLE,
+	IN_DOUBLE
+}	t_quote_state;
 
 typedef enum e_token_type
 {
@@ -38,17 +46,17 @@ typedef struct s_token
 	t_token_type	type;
 	struct s_token	*next;
 	struct s_token	*prev;
+
 }	t_token;
 
-
-void	exit_shell();
 /*
 	parsing
 */
 int		input_valid(t_data *data, int argc, char **argv);
 void	input_handler(t_data *data, char **envp);
 void	define_tokens_type(t_token *head);
-void	expand_variables(t_token *head, char **envp);
+bool	expand_variables(t_token *head, char **envp);
+void	get_token_ready(t_token *head);
 
 /*
 	nodes handling
@@ -70,16 +78,20 @@ void	pipes(char **cmds, char **ep);
 /*
 	errors
 */
+void	exit_shell(char *message);
 bool	syntax_error(t_token *head);
 bool	exit_syntax_error(char *s);
+void	error_message(char *s);
+bool	quote_error(t_quote_state *state);
 
 /*
 	utilities functions
 */
 void	print_tokens(t_token *head);
 bool	is_separator(char c);
-int		is_dolar(char *s);
 void	check_for_pipe(t_token *head, char **envp);
+void	update_quote_state(char c, t_quote_state *state);
+char	*free_vars(char	*a, char *b, char *c);
 
 
 #endif
