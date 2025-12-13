@@ -92,6 +92,7 @@ bool	is_separator(char c);
 void	check_for_pipe(t_token *head, char **envp);
 void	update_quote_state(char c, t_quote_state *state);
 char	*free_vars(char	*a, char *b, char *c);
-
+char	*get_var_name(char *s, size_t d_index);
+void	update_quote_state(char c, t_quote_state *state);
 
 #endif

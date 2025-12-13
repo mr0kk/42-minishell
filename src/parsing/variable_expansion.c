@@ -1,30 +1,6 @@
 #include "minishell.h"
 
 /*
-	function separation variable name 
-	and returns it as a string
-*/
-char	*get_var_name(char *s, size_t d_index)
-{
-	char	*var_name;
-	size_t	i;
-	size_t	len;
-
-	len = 0;
-	i = d_index + 1;
-	while (s[i] && ft_isalpha(s[i]))
-	{
-		len++;
-		i++;
-	}
-	var_name = (char *)malloc((len + 1) * sizeof(char));
-	if (!var_name)
-		return (NULL);
-	ft_strlcpy(var_name, s + d_index + 1, len + 1);
-	return (var_name);
-}
-
-/*
 	interating throuht envp[] looking for given variable name
 	when variable exist returns its string value 
 	empty string otherwise
@@ -97,32 +73,22 @@ char	*replace_var(char *s, size_t *d_index, char *envp[])
 	return (new_s);
 }
 
-bool	handle_expansion(char *token_s, t_quote_state *state, char **envp)
+/*
+	function hadles replacing token 
+	with expanded version of it
+*/
+bool	perform_expansion(t_token *current, size_t *i, char **envp)
 {
-	char	*new_token;
-	size_t	i;
+	char	*s;
 
-	i = 0;
-	*state = OUTSIDE;
-	while (token_s[i])
+	s = replace_var(current->token, i, envp);
+	if (!s)
 	{
-		update_quote_state(token_s[i], state);
-		if (token_s[i] == 36 && ft_isalpha(token_s[i + 1]) && *state != IN_SINGLE)
-		{
-			new_token = replace_var(token_s, &i, envp);
-			if (!new_token)
-			{
-				error_message("Memory allocation error");
-				return (1);
-			}
-			free(token_s);
-			token_s = new_token;
-		}
-		else
-			i++;
-	}
-	if (quote_error(state))
+		error_message("Memory allocation error");
 		return (1);
+	}
+	free(current->token);
+	current->token = s;
 	return (0);
 }
 
@@ -134,7 +100,6 @@ bool	expand_variables(t_token *head, char **envp)
 {
 	t_token	*current;
 	t_quote_state state;
-	char	*s;
 	size_t	i;
 
 	current = head;
@@ -147,14 +112,8 @@ bool	expand_variables(t_token *head, char **envp)
 			update_quote_state(current->token[i], &state);
 			if (current->token[i] == 36 && ft_isalpha(current->token[i + 1]) && state != IN_SINGLE)
 			{
-				s = replace_var(current->token, &i, envp);
-				if (!s)
-				{
-					error_message("Memory allocation error");
+				if (perform_expansion(current, &i, envp))
 					return (1);
-				}
-				free(current->token);
-				current->token = s;
 			}
 			else
 				i++;
@@ -163,4 +122,5 @@ bool	expand_variables(t_token *head, char **envp)
 			return (1);
 		current = current->next;
 	}
+	return (0);
 }

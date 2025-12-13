@@ -13,6 +13,7 @@ SRC = main.c \
 		parsing/type_defining.c \
 		parsing/variable_expansion.c \
 		utils/utils.c \
+		utils/var_expansion_utils.c \
 		commands/ft_echo.c \
 		pipes/pipes.c \
 		errors/syntax_handling.c \

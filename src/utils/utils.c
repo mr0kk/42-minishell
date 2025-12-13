@@ -49,27 +49,4 @@ char	*free_vars(char	*a, char *b, char *c)
 	return (NULL);
 }
 
-/*
-	function update quotes status 
-	depending if any quote is open or not
-*/
-void	update_quote_state(char c, t_quote_state *state)
-{
-	if (*state == OUTSIDE)
-	{
-		if (c == '\'')
-			*state = IN_SINGLE;
-		else if (c == '\"')
-			*state = IN_DOUBLE;
-	}
-	else if (*state == IN_SINGLE)
-	{
-		if (c == '\'')
-            *state = OUTSIDE;
-	}
-	else if (*state == IN_DOUBLE)
-	{
-		if (c == '\"')
-			*state = OUTSIDE;
-	}
-}
+
