@@ -12,6 +12,8 @@
 #include <unistd.h>
 #include <readline/history.h>
 
+#define PATH 4020
+
 /*
 	structures
 */

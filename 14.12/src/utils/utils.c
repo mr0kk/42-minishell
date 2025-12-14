@@ -12,23 +12,23 @@ void	print_tokens(t_token *head)
     }
 }
 
-void	check_for_pipe(t_token *head, char **envp)
-{
-	t_token *current;
-	char	*commands[2];
+// void	check_for_pipe(t_token *head, char **envp)
+// {
+// 	t_token *current;
+// 	char	*commands[2];
 
-	current = head;
-	commands[0] = current->token;
-	while (current)
-	{
-		if(current->type == PIPE)
-		{
-			commands[1] = current->next->token;
-			pipes(commands, envp);
-		}
-		current = current->next;
-	}
-}
+// 	current = head;
+// 	commands[0] = current->token;
+// 	while (current)
+// 	{
+// 		if(current->type == PIPE)
+// 		{
+// 			commands[1] = current->next->token;
+// 			pipes(commands, envp);
+// 		}
+// 		current = current->next;
+// 	}i
+// }
 
 bool	is_separator(char c)
 {
@@ -49,7 +49,7 @@ char	*free_vars(char	*a, char *b, char *c)
 	return (NULL);
 }
 
-void	check_for_buildins(t_token *head, t_data *data, int *fd, int i)
+void	check_for_buildins(t_token *head, t_data *data)
 {
 	if (ft_strncmp(head->token, "cd", 3) == 0)
 		cmd_cd(head);
@@ -66,5 +66,5 @@ void	check_for_buildins(t_token *head, t_data *data, int *fd, int i)
 	else if (ft_strncmp(head->token, "exit", 5) == 0)
 		cmd_exit(head);
 	else
-		exec_cmd(head->token, data->envp, fd, i);
+		exec_cmd(head->token, data->envp);
 }
