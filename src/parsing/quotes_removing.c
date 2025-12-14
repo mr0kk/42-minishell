@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/*
+	function return true if chararter is structurac quote 
+	returns false otherwise
+*/
 bool	is_structural_quote(char c, t_quote_state *state)
 {
 	if (*state == OUTSIDE)
@@ -28,6 +32,11 @@ bool	is_structural_quote(char c, t_quote_state *state)
 	return (false);
 }
 
+/*
+	for given token string function iterates throuht it 
+	and copy every character to new string if it's not 
+	a structurac quote
+*/
 char	*handle_removing(char *old_token)
 {
 	size_t	i;
@@ -55,6 +64,11 @@ char	*handle_removing(char *old_token)
 	return (new_token);
 }
 
+/*
+	function iterates throught each token and calls function
+	that handle whole removing process for every CMD,
+	ARG or FILE_TOKEN token types
+*/
 void	remove_quotes(t_token *head)
 {
 	t_token *current;
