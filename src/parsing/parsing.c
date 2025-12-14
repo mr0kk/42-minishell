@@ -76,6 +76,7 @@ void	input_handler(t_data *data, char **envp)
 		return (free_tokens(&head));
 	if (expand_variables(head, envp))
 		return (free_tokens(&head));
+	remove_quotes(head);
 	print_tokens(head);
 
 	// check_for_pipe(head, envp);

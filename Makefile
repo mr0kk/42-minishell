@@ -12,6 +12,7 @@ SRC = main.c \
 		parsing/nodes_handling.c \
 		parsing/type_defining.c \
 		parsing/variable_expansion.c \
+		parsing/quotes_removing.c \
 		utils/utils.c \
 		utils/var_expansion_utils.c \
 		commands/ft_echo.c \

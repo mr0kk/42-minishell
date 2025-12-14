@@ -57,6 +57,7 @@ void	input_handler(t_data *data, char **envp);
 void	define_tokens_type(t_token *head);
 bool	expand_variables(t_token *head, char **envp);
 void	get_token_ready(t_token *head);
+void	remove_quotes(t_token *head);
 
 /*
 	nodes handling
