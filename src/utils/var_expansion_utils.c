@@ -35,9 +35,11 @@ char	*get_var_name(char *s, size_t d_index)
 	size_t	i;
 	size_t	len;
 
-	len = 0;
 	i = d_index + 1;
-	while (s[i] && ft_isalpha(s[i]))
+	if (s[i] == '?')
+		return (ft_strdup("?"));
+	len = 0;
+	while (s[i] && (ft_isalnum(s[i]) || s[i] == '_'))
 	{
 		len++;
 		i++;

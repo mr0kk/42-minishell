@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+int g_signal_pid = 0;
 
 /*
 	This function checks amount of arguments given when program starts
@@ -44,6 +45,7 @@ void	free_data(t_data *data)
 */
 void	minishell_interactive(t_data *data, char **envp)
 {
+	init_signals();
 	while (1)
 	{
 		data->user_input = readline("minishell$ ");
@@ -73,7 +75,7 @@ int main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
-
+	data.last_exit_code = 0;
 	add_env(&data, envp);
 	if (!input_check(&data, argc, argv))
 		exit_shell("Wrong usage"); // add usage error handling

@@ -53,12 +53,13 @@ char	*handle_removing(char *old_token)
 	while (old_token[i])
 	{
 		if (is_structural_quote(old_token[i], &state))
-		{
 			i++;
+		else
+		{
+			new_token[j] = old_token[i];
+			i++;
+			j++;
 		}
-		new_token[j] = old_token[i];
-		i++;
-		j++;
 	}
 	new_token[j] = '\0';
 	return (new_token);

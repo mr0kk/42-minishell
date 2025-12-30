@@ -8,6 +8,11 @@ void	add_env(t_data *data, char **envp)
 	i = 0;
 	while (envp && envp[i])
 		i++;
+	if (getenv("USER") == NULL)
+	{
+		i++;
+		j++;
+	}
 	data->envp = ft_calloc(i + 1, sizeof * data->envp);
 	j = 0;
 	while (envp[j])
@@ -15,6 +20,8 @@ void	add_env(t_data *data, char **envp)
 		data->envp[j] = ft_strdup(envp[j]);
 		j++;
 	}
+	if (getenv("USER") == NULL)
+		data->envp[0] = ft_strdup("USER=guest");
 }
 
 /*
@@ -88,12 +95,15 @@ void	input_handler(t_data *data, char **envp)
 	t_token *head;
 	
 	head = read_tokens(data->user_input);
+	if (!head)
+		return ;
 	define_tokens_type(head);
 	if (syntax_error(head))
 		return (free_tokens(&head));
-	if (expand_variables(head, envp))
+	if (expand_variables(head, data->envp, data))
 		return (free_tokens(&head));
 	remove_quotes(head);
+
 	// print_tokens(head);
 	start_execution(head, data);
 	free_tokens(&head);

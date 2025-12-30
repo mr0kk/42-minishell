@@ -51,7 +51,7 @@ char	*create_exp_str(char *old_s, char *var_name, char *var_value, size_t d_inde
 	function takes token with $ in it and its index
 	and returns new one with expaned variable
 */
-char	*replace_var(char *s, size_t *d_index, char *envp[])
+char	*replace_var(char *s, size_t *d_index, char *envp[], t_data *data)
 {
 	char	*new_s;
 	char	*var_name;
@@ -62,9 +62,14 @@ char	*replace_var(char *s, size_t *d_index, char *envp[])
 	var_name = get_var_name(s, *d_index);
 	if (!var_name)
 		return (free_vars(var_name, NULL, NULL));
-	var_value = find_var_value(var_name, envp);
-	if (!var_value)
-		return (free_vars(var_value, NULL, NULL));
+	if (ft_strncmp(var_name, "?", 2) == 0)
+		var_value = ft_itoa(data->last_exit_code);
+	else
+	{
+		var_value = find_var_value(var_name, envp);
+		if (!var_value)
+			return (free_vars(var_value, NULL, NULL));
+	}
 	new_s = create_exp_str(s, var_name, var_value, *d_index);
 	if (!new_s)
 		return (free_vars(var_name, var_value, NULL));
@@ -77,11 +82,11 @@ char	*replace_var(char *s, size_t *d_index, char *envp[])
 	function hadles replacing token 
 	with expanded version of it
 */
-bool	perform_expansion(t_token *current, size_t *i, char **envp)
+bool	perform_expansion(t_token *current, size_t *i, char **envp, t_data *data)
 {
 	char	*s;
 
-	s = replace_var(current->token, i, envp);
+	s = replace_var(current->token, i, envp, data);
 	if (!s)
 	{
 		error_message("Memory allocation error");
@@ -96,7 +101,7 @@ bool	perform_expansion(t_token *current, size_t *i, char **envp)
 	function replacing envariamental variabes with its values
 	and changing given tokens linked list
 */
-bool	expand_variables(t_token *head, char **envp)
+bool	expand_variables(t_token *head, char **envp, t_data *data)
 {
 	t_token	*current;
 	t_quote_state state;
@@ -110,9 +115,9 @@ bool	expand_variables(t_token *head, char **envp)
 		while (current->token[i])
 		{
 			update_quote_state(current->token[i], &state);
-			if (current->token[i] == 36 && ft_isalpha(current->token[i + 1]) && state != IN_SINGLE)
+			if (current->token[i] == 36 && (ft_isalnum(current->token[i + 1]) || current->token[i + 1] == '_' || current->token[i + 1] == '?') && state != IN_SINGLE)
 			{
-				if (perform_expansion(current, &i, envp))
+				if (perform_expansion(current, &i, envp, data))
 					return (1);
 			}
 			else

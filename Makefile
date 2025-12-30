@@ -24,6 +24,7 @@ SRC = main.c \
 		commands/cmd_unset.c \
 		execution/exec.c \
 		execution/exec_utils.c \
+		execution/signals.c \
 		errors/syntax_handling.c \
 		errors/error_handling.c \
 		errors/error_messages.c 
