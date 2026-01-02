@@ -10,9 +10,12 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <signal.h>
 #include <readline/history.h>
 
 #define PATH 4020
+
+extern int g_signal_pid;
 
 /*
 	structures
@@ -22,6 +25,7 @@ typedef struct s_data
 	bool	interative;
 	char	*user_input;
 	char	**envp;
+	int		last_exit_code;
 }	t_data;
 
 typedef enum e_quote_state
@@ -85,7 +89,8 @@ void	exec_cmd(char *av, char **envp);
 /*
 	execution
 */
-int	start_execution(t_token *head, t_data *data);
+int		start_execution(t_token *head, t_data *data);
+void	init_signals(void);
 
 /*
 	errors
