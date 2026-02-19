@@ -104,7 +104,7 @@ void	input_handler(t_data *data, char **envp)
 		return (free_tokens(&head));
 	remove_quotes(head);
 
-	// print_tokens(head);
+	print_tokens(head);
 	start_execution(head, data);
 	free_tokens(&head);
 }
