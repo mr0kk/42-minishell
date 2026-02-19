@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adamjurczyk <adamjurczyk@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 19:39:07 by rmrok             #+#    #+#             */
-/*   Updated: 2025/12/14 16:07:59 by adamjurczyk      ###   ########.fr       */
+/*   Updated: 2026/02/19 22:47:20 by rmrok            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	minishell_interactive(t_data *data, char **envp)
 		if (!data->user_input)
 		{
 			free(data->user_input);
+			rl_clear_history();
 			break;
 		}
 		if (data->user_input[0] != '\0')
