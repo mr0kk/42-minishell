@@ -1,5 +1,16 @@
 #include "minishell.h"
 
+void	ignore_signals_in_parent(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+void	defauld_signals_in_child(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
 void	handle_signals(int sig)
 {
 	g_signal_pid = sig;

@@ -91,6 +91,8 @@ void	exec_cmd(char *av, char **envp);
 */
 int		start_execution(t_token *head, t_data *data);
 void	init_signals(void);
+void	defauld_signals_in_child(void);
+void	ignore_signals_in_parent(void);
 
 /*
 	errors

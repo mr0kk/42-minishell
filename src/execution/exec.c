@@ -154,9 +154,11 @@ void	exec_cmd1(int *fd, char *av, char **envp)
 	int		fdd;
 	int		pid;
 
+	ignore_signals_in_parent();
 	pid = fork();
 	if (pid == 0)
 	{
+		defauld_signals_in_child();
 		fdd = fd[1];
 		args = ft_split(av, ' ');
 		if (check_command(envp, args[0]))

@@ -22,9 +22,9 @@ SRC = main.c \
 		commands/cmd_export.c \
 		commands/cmd_pwd.c \
 		commands/cmd_unset.c \
+		execution/signals.c \
 		execution/exec.c \
 		execution/exec_utils.c \
-		execution/signals.c \
 		errors/syntax_handling.c \
 		errors/error_handling.c \
 		errors/error_messages.c 

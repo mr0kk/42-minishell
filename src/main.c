@@ -51,6 +51,7 @@ void	minishell_interactive(t_data *data, char **envp)
 		data->user_input = readline("minishell$ ");
 		if (!data->user_input)
 		{
+			printf("exit\n");
 			free(data->user_input);
 			rl_clear_history();
 			break;
@@ -60,6 +61,7 @@ void	minishell_interactive(t_data *data, char **envp)
 		if (!ft_strncmp(data->user_input, "exit", 5))
 		{
 			free(data->user_input);
+			rl_clear_history();
 			break;
 		}
 		input_handler(data, envp);
