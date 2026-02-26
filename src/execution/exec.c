@@ -154,11 +154,11 @@ void	exec_cmd1(int *fd, char *av, char **envp)
 	int		fdd;
 	int		pid;
 
-	ignore_signals_in_parent();
+	ignore_signals_in_parent(); // ta funkcja musi być parent procesie 
 	pid = fork();
 	if (pid == 0)
 	{
-		defauld_signals_in_child();
+		defauld_signals_in_child(); // tą funkcje trzeba dodać na początku child proocesu
 		fdd = fd[1];
 		args = ft_split(av, ' ');
 		if (check_command(envp, args[0]))
