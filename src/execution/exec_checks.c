@@ -21,7 +21,8 @@ int	check_for_pipes(t_token *head)
 	numofpipes = 0;
 	while (current)
 	{
-		if (current->type == PIPE)
+		if (current->type == PIPE || current->type == REPLACE
+			|| current->type == FROM_FILE || current->type == ADD_END)
 			numofpipes++;
 		current = current->next;
 	}
