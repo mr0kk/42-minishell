@@ -74,6 +74,7 @@ typedef struct s_exec
 	char	**cmds;
 	char	**envp;
 	int		numofcmd;
+	int		numofpipes;
 }	t_exec;
 
 /*
@@ -127,7 +128,7 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd);
 void	start_pipes(t_token *head, t_data *data, int numofpipes);
 void	start_execution(t_token *head, t_data *data);
 void	ignore_signals_in_parent(void);
-void	defauld_signals_in_child(void);
+void	default_signals_in_child(void);
 void	handle_signals(int sig);
 void	init_signals(void);
 char	**handle_redirections(char **args);

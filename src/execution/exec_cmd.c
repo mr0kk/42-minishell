@@ -22,7 +22,7 @@ void	exec_cmd_withoutpipe(t_token *head, char *av, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-		defauld_signals_in_child();
+		default_signals_in_child();
 		tmp = *get_cmds(head, 0);
 		args = ft_split(tmp, ' ');
 		check(envp, args[0]);
@@ -50,7 +50,7 @@ void	exec_cmd_absolutepath_withoutpipe(char *av, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-		defauld_signals_in_child();
+		default_signals_in_child();
 		args = ft_split(av, '/');
 		while (args[i])
 			i++;

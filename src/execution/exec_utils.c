@@ -60,8 +60,10 @@ char	**get_cmds(t_token *head, int numofcmds)
 	int		i;
 	char	*tmp;
 
-	curr = head;
-	cmds = (char **)calloc(numofcmds + 1, sizeof(char *));
+	curr = head; 
+	cmds = (char **)ft_calloc(numofcmds + 1, sizeof(char *));
+	if (!cmds)
+		return (NULL);
 	i = 0;
 	while (curr)
 	{
@@ -69,6 +71,7 @@ char	**get_cmds(t_token *head, int numofcmds)
 		{
 			tmp = cmds[i];
 			cmds[i] = ft_strjoin(tmp, curr->token);
+			free(tmp);
 			tmp = cmds[i];
 			cmds[i] = ft_strjoin(tmp, " ");
 			free(tmp);

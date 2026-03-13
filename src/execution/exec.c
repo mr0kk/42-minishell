@@ -16,10 +16,13 @@ void	create_pipes(int (*fd)[2], int n)
 {
 	int	i;
 
-	i = -1;
-	while (i++ < n - 2)
+	i = 0;
+	while (i < n)
+	{
 		if (pipe(fd[i]) == -1)
 			exit(1);
+		i++;
+	}
 }
 
 void	child_process(int i, int (*fd)[2], t_exec *exec)
@@ -29,16 +32,20 @@ void	child_process(int i, int (*fd)[2], t_exec *exec)
 	char	*path;
 	int		j;
 
-	defauld_signals_in_child();
+	default_signals_in_child();
 	if (i > 0)
 		dup2(fd[i - 1][0], STDIN_FILENO);
-	if (i < exec->numofcmd - 2)
+	if (i < exec->numofpipes)
 		dup2(fd[i][1], STDOUT_FILENO);
-	j = -1;
-	while (j++ < exec->numofcmd - 2)
+	if (exec->numofpipes > 0)
 	{
-		close(fd[j][0]);
-		close(fd[j][1]);
+		j = 0;
+		while (j < exec->numofpipes)
+		{
+			close(fd[j][0]);
+			close(fd[j][1]);
+			j++;
+		}
 	}
 	exec_cmd(exec->cmds[i], exec->envp);
 }
@@ -53,21 +60,35 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	exec.cmds = cmds;
 	exec.envp = data->envp;
 	exec.numofcmd = numofcmd;
-	fd = malloc(sizeof(int [2]) * (numofcmd - 2));
-	create_pipes(fd, numofcmd);
-	i = -1;
-	while (i++ < numofcmd - 1)
+	exec.numofpipes = numofcmd - 1;
+	if (exec.numofpipes > 0)
+	{
+		fd = malloc(sizeof(int [2]) * exec.numofpipes);
+		if (!fd)
+			return ;
+		create_pipes(fd, exec.numofpipes);
+	}
+	else
+		fd = NULL;
+	i = 0;
+	while (i< numofcmd)
 	{
 		pid = fork();
 		if (pid == 0)
 			child_process(i, fd, &exec);
 		ignore_signals_in_parent();
+		i++;
 	}
-	i = -1;
-	while (i++ < numofcmd - 2)
+	if (exec.numofpipes > 0)
 	{
-		close(fd[i][0]);
-		close(fd[i][1]);
+		i = 0;
+		while (i < exec.numofpipes)
+		{
+			close(fd[i][0]);
+			close(fd[i][1]);
+			i++;
+		}
+		free(fd);
 	}
 	waitpid(pid, NULL, 0);
 }
@@ -75,9 +96,16 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 void	start_pipes(t_token *head, t_data *data, int numofpipes)
 {
 	char	**cmds;
+	int		i;
 
-	cmds = get_cmds(head, numofpipes);
-	exec_pipes(cmds, data, numofpipes + 2);
+	cmds = get_cmds(head, numofpipes + 1);
+	if (!cmds)
+		return ;
+	exec_pipes(cmds, data, numofpipes + 1);
+	i = 0;
+	while (cmds[i])
+		free(cmds[i++]);
+	free(cmds);
 }
 
 void	start_execution(t_token *head, t_data *data)
