@@ -40,9 +40,6 @@ void	child_process(int i, int (*fd)[2], t_exec *exec)
 		close(fd[j][0]);
 		close(fd[j][1]);
 	}
-	args = ft_split(exec->cmds[i], ' ');
-	clean_args = handle_redirections(args);
-	path = get_path(exec->envp, clean_args[0]);
 	exec_cmd(exec->cmds[i], exec->envp);
 }
 
