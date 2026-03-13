@@ -71,6 +71,7 @@ char	**get_cmds(t_token *head, int numofcmds)
 			cmds[i] = ft_strjoin(tmp, curr->token);
 			tmp = cmds[i];
 			cmds[i] = ft_strjoin(tmp, " ");
+			free(tmp);
 		}
 		else
 			i++;
