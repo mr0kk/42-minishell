@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_export.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:50:11 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 13:59:53 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	get_index_export(char **envp, char *var)
@@ -7,7 +19,7 @@ int	get_index_export(char **envp, char *var)
 	char	*tmp;
 
 	j = 0;
-	while(var[j] != '=')
+	while (var[j] != '=')
 		j++;
 	tmp = ft_substr(var, 0, j + 1);
 	i = 0;
@@ -24,7 +36,7 @@ int	get_index_export(char **envp, char *var)
 	return (-1);
 }
 
-void cmd_export(t_token *head, t_data *data)
+void	cmd_export(t_token *head, t_data *data)
 {
 	t_token	*tmp;
 	int		i;

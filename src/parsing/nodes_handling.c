@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   nodes_handling.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:51:03 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 17:37:38 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	free_tokens(t_token **head)
@@ -21,10 +33,10 @@ void	free_tokens(t_token **head)
 
 t_token	*create_node(char *text)
 {
-	t_token *new_node;
+	t_token	*new_node;
 
 	new_node = (t_token *)malloc(sizeof(t_token));
-	if(!new_node)
+	if (!new_node)
 		exit(1);
 	new_node->prev = NULL;
 	new_node->next = NULL;

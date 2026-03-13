@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_env.c                                          :+:      :+:    :+:   */
+/*   from_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/07 13:50:04 by ajurczyk          #+#    #+#             */
-/*   Updated: 2026/03/07 13:58:39 by ajurczyk         ###   ########.fr       */
+/*   Created: 2026/03/07 13:51:29 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 21:06:20 by ajurczyk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cmd_env(t_data *data)
+int	redir_from_file(char **args, int i)
 {
-	int	i;
+	int	fd;
 
-	i = 0;
-	while (data->envp[i])
-		ft_putendl_fd(data->envp[i++], STDOUT_FILENO);
+	fd = open(args[i + 1], O_RDONLY);
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (i + 2);
 }

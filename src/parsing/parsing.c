@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:51:08 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 17:38:59 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	add_env(t_data *data, char **envp)
@@ -46,7 +58,7 @@ char	*read_token(char *input, int *index)
 
 	skip_separators(input, index);
 	if (!input[*index])
-        return (NULL);
+		return (NULL);
 	start = *index;
 	quote_type = 0;
 	while (input[*index])
@@ -66,12 +78,14 @@ char	*read_token(char *input, int *index)
 		return (NULL);
 	return (ft_substr(input, start, *index - start));
 }
+
 /*
 	function takes input string and separetes it 
 	creating tokens
 	returns head element of linked list
 */
-t_token *read_tokens(char *input)
+
+t_token	*read_tokens(char *input)
 {
 	char	*token;
 	t_token	*head;
@@ -92,8 +106,8 @@ t_token *read_tokens(char *input)
 
 void	input_handler(t_data *data, char **envp)
 {
-	t_token *head;
-	
+	t_token	*head;
+
 	head = read_tokens(data->user_input);
 	if (!head)
 		return ;
@@ -103,8 +117,6 @@ void	input_handler(t_data *data, char **envp)
 	if (expand_variables(head, data->envp, data))
 		return (free_tokens(&head));
 	remove_quotes(head);
-
-	// print_tokens(head);
 	start_execution(head, data);
 	free_tokens(&head);
 }

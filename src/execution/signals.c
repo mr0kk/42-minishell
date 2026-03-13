@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:50:58 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 14:05:55 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ignore_signals_in_parent(void)
@@ -5,6 +17,7 @@ void	ignore_signals_in_parent(void)
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }
+
 void	defauld_signals_in_child(void)
 {
 	signal(SIGINT, SIG_DFL);

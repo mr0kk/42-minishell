@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 20:12:13 by rmrok             #+#    #+#             */
-/*   Updated: 2025/10/29 20:34:52 by rmrok            ###   ########.fr       */
+/*   Updated: 2026/03/07 14:04:32 by ajurczyk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,15 @@ bool	syntax_error_pipe(t_token *current)
 */
 bool	syntax_error_redir(t_token *current)
 {
-	if ((current->type == REDIR_IN || current->type == REDIR_OUT) && !current->next) // > at end
+	if ((current->type == FROM_FILE || current->type == REPLACE)
+		&& !current->next)
 		return (exit_syntax_error(current->token));
-	if ((current->type == REDIR_IN || current->type == REDIR_OUT) && current->next && current->next->type == PIPE)
+	if ((current->type == FROM_FILE || current->type == REPLACE)
+		&& current->next && current->next->type == PIPE)
 		return (exit_syntax_error(current->token));
-	if ((current->type == REDIR_IN || current->type == REDIR_OUT) && current->next && // > < or < >
-		(current->next->type == REDIR_IN || current->next->type == REDIR_OUT))
+	if ((current->type == FROM_FILE || current->type == REPLACE)
+		&& current->next && (current->next->type == FROM_FILE
+			|| current->next->type == REPLACE))
 		return (exit_syntax_error(current->token));
 	return (0);
 }
@@ -51,8 +54,8 @@ bool	syntax_error_redir(t_token *current)
 */
 bool	syntax_error(t_token *head)
 {
-	t_token *current;
-	
+	t_token	*current;
+
 	current = head;
 	while (current)
 	{

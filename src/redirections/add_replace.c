@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_env.c                                          :+:      :+:    :+:   */
+/*   add_replace.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/07 13:50:04 by ajurczyk          #+#    #+#             */
-/*   Updated: 2026/03/07 13:58:39 by ajurczyk         ###   ########.fr       */
+/*   Created: 2026/03/07 13:51:25 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 20:28:35 by ajurczyk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cmd_env(t_data *data)
+int	redir_add_replace(char **args, int i)
 {
-	int	i;
+	int	fd;
 
-	i = 0;
-	while (data->envp[i])
-		ft_putendl_fd(data->envp[i++], STDOUT_FILENO);
+	if (!ft_strncmp(args[i], ">>", 3))
+		fd = open(args[i + 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
+	else
+		fd = open(args[i + 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	return (i + 2);
 }

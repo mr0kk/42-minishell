@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_unset.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:50:18 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 13:59:05 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	remove_env_var(t_data *data, int idx)
 {
-	//printf("usuwam %s\n", data->envp[idx]);
 	while (data->envp[idx + 1])
 	{
 		data->envp[idx] = ft_strdup(data->envp[idx + 1]);

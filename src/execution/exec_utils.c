@@ -1,58 +1,113 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:50:42 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 21:07:10 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-// int	check_for_pipe(t_token *head)
-// {
-// 	t_token *current;
-// 	int		i;
+char	*return_path(char **env_paths, char *cmd)
+{
+	char	*path;
+	char	*temp;
 
-// 	i = 0;
-// 	current = head;
-// 	while (current)
-// 	{
-// 		if(current->type == PIPE)
-// 			i++;
-// 		current = current->next;
-// 	}
-// 	return (i);
-// }
+	while (*env_paths)
+	{
+		temp = ft_strjoin(*env_paths, "/");
+		path = ft_strjoin(temp, cmd);
+		if (access(path, X_OK) == 0)
+		{
+			free(temp);
+			return (path);
+		}
+		free(temp);
+		free(path);
+		env_paths++;
+	}
+	return (NULL);
+}
 
-// ssize_t		find_env(char *env, t_data data)
-// {
-// 	char	*sub;
-// 	ssize_t i;
-// 	ssize_t index;
+char	*get_path(char **ep, char *cmd)
+{
+	char	**env_paths;
 
-// 	if (!env)
-// 		return (-1);
-// 	i = 0;
-// 	sub = NULL;
-// 	while (data->envp[i])
-// 	{
-// 		if ((index = ft_get_char_by_index(data->envp[i], '=')) == -1)
-// 			index = ft_strlen(data->envp[i]);
-// 		if ((sub = ft_substr(data->envp[i], 0, index)))
-// 		{
-// 			if (ft_strequ(sub, env))
-// 			{
-// 				free(sub);
-// 				return (i);
-// 			}
-// 			free(sub);
-// 		}
-// 		i++;
-// 	}
-// 	return (-1);
-// }
+	while (*ep)
+	{
+		if (ft_strncmp(*ep, "PATH", 4) == 0)
+			break ;
+		ep++;
+	}
+	env_paths = ft_split(*ep + 5, ':');
+	if (return_path(env_paths, cmd) == 0)
+	{
+		free(env_paths);
+		return (0);
+	}
+	else
+		return (return_path(env_paths, cmd));
+}
 
-// char	*get_env(char *env, t_data data)
-// {
-// 	ssize_t i;
-// 	size_t	len;
+char	**get_cmds(t_token *head, int numofcmds)
+{
+	t_token	*curr;
+	char	**cmds;
+	int		i;
+	char	*tmp;
 
-// 	if (!env)
-// 		return (NULL);
-// 	len = ft_strlen(env);
-// 	if ((i = find_env(env, data)) != -1)
-// 		return (ft_substr(data->envp[i], (len + 1), ft_strlen(data->envp[i])));
-// 	return (NULL);
-// }
+	curr = head;
+	cmds = (char **)calloc(numofcmds + 1, sizeof(char *));
+	i = 0;
+	while (curr)
+	{
+		if (curr->type != PIPE)
+		{
+			tmp = cmds[i];
+			cmds[i] = ft_strjoin(tmp, curr->token);
+			tmp = cmds[i];
+			cmds[i] = ft_strjoin(tmp, " ");
+			free(tmp);
+		}
+		else
+			i++;
+		curr = curr->next;
+	}
+	return (cmds);
+}
+
+void	check(char **envp, char *args)
+{
+	if (check_command(envp, args))
+	{
+		printf("wrong command %s\n", args);
+		free(args);
+		exit(1);
+	}
+}
+
+char	**handle_redirections(char **args)
+{
+	int		i;
+	int		j;
+	char	**clean;
+
+	clean = malloc(sizeof(char *) * 100); // no free after this malloc
+	i = 0;
+	j = 0;
+	while (args[i])
+	{
+		if (!ft_strncmp(args[i], ">>", 3) || !ft_strncmp(args[i], ">", 2))
+			i = redir_add_replace(args, i);
+		else if (!ft_strncmp(args[i], "<", 2))
+			i = redir_from_file(args, i);
+		else
+			clean[j++] = ft_strdup(args[i++]);
+	}
+	clean[j] = NULL;
+	return (clean);
+}

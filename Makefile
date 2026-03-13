@@ -24,10 +24,16 @@ SRC = main.c \
 		commands/cmd_unset.c \
 		execution/signals.c \
 		execution/exec.c \
+		execution/exec_cmd.c \
+		execution/exec_checks.c \
 		execution/exec_utils.c \
 		errors/syntax_handling.c \
 		errors/error_handling.c \
-		errors/error_messages.c 
+		errors/error_messages.c \
+		redirections/add_replace.c \
+		redirections/from_file.c \
+		redirections/heredoc.c \
+		redirections/redir_utils.c 
 
 
 SRCS   = $(addprefix $(SRC_PATH), $(SRC))

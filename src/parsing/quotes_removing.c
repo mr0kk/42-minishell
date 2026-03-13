@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes_removing.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:51:12 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 18:23:01 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -39,10 +51,10 @@ bool	is_structural_quote(char c, t_quote_state *state)
 */
 char	*handle_removing(char *old_token)
 {
-	size_t	i;
-	size_t	j;
-	t_quote_state state;
-	char	*new_token;
+	size_t			i;
+	size_t			j;
+	t_quote_state	state;
+	char			*new_token;
 
 	i = 0;
 	j = 0;
@@ -72,13 +84,13 @@ char	*handle_removing(char *old_token)
 */
 void	remove_quotes(t_token *head)
 {
-	t_token *current;
+	t_token	*current;
 	char	*clear_token;
 
 	current = head;
 	while (current)
 	{
-		if (current->type == CMD || current->type == ARG || current->type == FILE_TOKEN)
+		if (current->type == CMD || current->type == ARG)
 		{
 			clear_token = handle_removing(current->token);
 			if (clear_token)

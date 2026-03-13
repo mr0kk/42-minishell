@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var_expansion_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/07 13:51:53 by ajurczyk          #+#    #+#             */
+/*   Updated: 2026/03/07 18:40:47 by ajurczyk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -16,7 +28,7 @@ void	update_quote_state(char c, t_quote_state *state)
 	else if (*state == IN_SINGLE)
 	{
 		if (c == '\'')
-            *state = OUTSIDE;
+			*state = OUTSIDE;
 	}
 	else if (*state == IN_DOUBLE)
 	{
@@ -49,4 +61,23 @@ char	*get_var_name(char *s, size_t d_index)
 		return (NULL);
 	ft_strlcpy(var_name, s + d_index + 1, len + 1);
 	return (var_name);
+}
+
+/*
+	interating throuht envp[] looking for given variable name
+	when variable exist returns its string value 
+	empty string otherwise
+*/
+char	*find_var_value(char *var_name, char *envp[])
+{
+	size_t	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(var_name, envp[i], ft_strlen(var_name)))
+			return (ft_strdup(envp[i] + ft_strlen(var_name) + 1));
+		i++;
+	}
+	return (ft_strdup(""));
 }
