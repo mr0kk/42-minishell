@@ -1,0 +1,9 @@
+Makefile
+include
+minishell
+test.txt
+test10.txt
+test11.txt
+test2.txt
+test3.txt
+test4.txt

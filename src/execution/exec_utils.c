@@ -36,21 +36,29 @@ char	*return_path(char **env_paths, char *cmd)
 char	*get_path(char **ep, char *cmd)
 {
 	char	**env_paths;
+	char	*path;
 
+	if (!ep || !cmd)
+		return (NULL);
 	while (*ep)
 	{
 		if (ft_strncmp(*ep, "PATH", 4) == 0)
 			break ;
 		ep++;
 	}
+	if (!*ep)
+		return (NULL);
 	env_paths = ft_split(*ep + 5, ':');
-	if (return_path(env_paths, cmd) == 0)
-	{
-		free(env_paths);
-		return (0);
-	}
-	else
-		return (return_path(env_paths, cmd));
+	// if (return_path(env_paths, cmd) == 0)
+	// {
+	// 	free(env_paths);
+	// 	return (0);
+	// }
+	// else
+	// 	return (return_path(env_paths, cmd));
+	path = return_path(env_paths, cmd);
+	free_string_array(env_paths);
+	return (path);
 }
 
 char	**get_cmds(t_token *head, int numofcmds)
@@ -83,15 +91,15 @@ char	**get_cmds(t_token *head, int numofcmds)
 	return (cmds);
 }
 
-void	check(char **envp, char *args)
-{
-	if (check_command(envp, args))
-	{
-		printf("wrong command %s\n", args);
-		free(args);
-		exit(1);
-	}
-}
+// void	check(char **envp, char *args)
+// {
+// 	if (check_command(envp, args))
+// 	{
+// 		printf("wrong command %s\n", args);
+// 		free(args);
+// 		exit(1);
+// 	}
+// }
 
 char	**handle_redirections(char **args)
 {
