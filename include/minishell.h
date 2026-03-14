@@ -107,7 +107,7 @@ void	cmd_exit(t_token *head);
 void	cmd_export(t_token *head, t_data *data);
 void	cmd_pwd(t_token *head);
 void	cmd_unset(t_token *head, t_data *data);
-void	exec_cmd(char *av, char **envp, t_data *data);
+int		exec_cmd(char *av, char **envp, t_data *data);
 
 /*
 	execution

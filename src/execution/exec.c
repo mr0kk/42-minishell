@@ -30,13 +30,26 @@ void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 	char	**args;
 	char	**clean_args;
 	char	*path;
+	int		err_code;
 	int		j;
 
 	default_signals_in_child();
 	if (i > 0)
-		dup2(fd[i - 1][0], STDIN_FILENO);
+	{
+		if (dup2(fd[i - 1][0], STDIN_FILENO) == -1)
+		{
+			perror("Error on dup2 input");
+			exit(EXIT_FAILURE);
+		}
+	}
 	if (i < exec->numofpipes)
-		dup2(fd[i][1], STDOUT_FILENO);
+	{
+		if (dup2(fd[i][1], STDOUT_FILENO) == -1)
+		{
+			perror("Error on dup2 output");
+			exit(EXIT_FAILURE);
+		}
+	}
 	if (exec->numofpipes > 0)
 	{
 		j = 0;
@@ -47,7 +60,14 @@ void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 			j++;
 		}
 	}
-	exec_cmd(exec->cmds[i], exec->envp, data);
+	err_code = exec_cmd(exec->cmds[i], exec->envp, data);
+	if (exec->cmds)
+		free_string_array(exec->cmds);
+	if (data)
+		free_all(data);
+	if (exec->numofpipes > 0 && fd)
+        free(fd);
+	exit(err_code);
 }
 
 void	exec_pipes(char **cmds, t_data *data, int numofcmd)
@@ -92,6 +112,8 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	}
 	while (waitpid(-1, NULL, 0) > 0)
 		continue ;
+	// if (fd)
+	// 	free(fd);
 	// waitpid(pid, NULL, 0);
 }
 

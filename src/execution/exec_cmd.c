@@ -68,7 +68,7 @@ void	exec_cmd_absolutepath_withoutpipe(char *av, char **envp)
 	waitpid(pid, NULL, 0);
 }
 
-void	exec_cmd(char *av, char **envp, t_data *data)
+int	exec_cmd(char *av, char **envp, t_data *data)
 {
 	char	**args;
 	char	**clean_args;
@@ -81,8 +81,7 @@ void	exec_cmd(char *av, char **envp, t_data *data)
 		printf("wrong command\n");
 		free_string_array(args);
 		free_string_array(clean_args);
-		// free_all(data);
-		exit(1);
+		return (126);
 	}
 	path = get_path(envp, clean_args[0]);
 	if (execve(path, clean_args, envp) == -1)
@@ -91,6 +90,10 @@ void	exec_cmd(char *av, char **envp, t_data *data)
 		free(path);
 		free_string_array(args);
 		free_string_array(clean_args);
-		exit(1);
+		return (126);
 	}
+	free(path);
+	free_string_array(args);
+	free_string_array(clean_args);
+	return (0);
 }
