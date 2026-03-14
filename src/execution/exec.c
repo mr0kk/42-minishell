@@ -25,7 +25,7 @@ void	create_pipes(int (*fd)[2], int n)
 	}
 }
 
-void	child_process(int i, int (*fd)[2], t_exec *exec)
+void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 {
 	char	**args;
 	char	**clean_args;
@@ -47,7 +47,7 @@ void	child_process(int i, int (*fd)[2], t_exec *exec)
 			j++;
 		}
 	}
-	exec_cmd(exec->cmds[i], exec->envp);
+	exec_cmd(exec->cmds[i], exec->envp, data);
 }
 
 void	exec_pipes(char **cmds, t_data *data, int numofcmd)
@@ -71,11 +71,11 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	else
 		fd = NULL;
 	i = 0;
-	while (i< numofcmd)
+	while (i < numofcmd)
 	{
 		pid = fork();
 		if (pid == 0)
-			child_process(i, fd, &exec);
+			child_process(i, fd, &exec, data);
 		ignore_signals_in_parent();
 		i++;
 	}
@@ -90,7 +90,9 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 		}
 		free(fd);
 	}
-	waitpid(pid, NULL, 0);
+	while (waitpid(-1, NULL, 0) > 0)
+		continue ;
+	// waitpid(pid, NULL, 0);
 }
 
 void	start_pipes(t_token *head, t_data *data, int numofpipes)

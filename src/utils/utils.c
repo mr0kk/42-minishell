@@ -30,3 +30,19 @@ char	*free_vars(char	*a, char *b, char *c)
 		free(c);
 	return (NULL);
 }
+
+void    free_string_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (arr)
+	{
+		while (arr[i])
+		{
+			free(arr[i]);
+			i++;
+		}
+		free(arr);
+	}
+}

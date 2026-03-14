@@ -38,6 +38,7 @@ typedef struct s_data
 	char	*user_input;
 	char	**envp;
 	int		last_exit_code;
+	struct s_token *head;
 }	t_data;
 
 typedef enum e_quote_state
@@ -87,6 +88,7 @@ bool	expand_variables(t_token *head, char **envp, t_data *data);
 void	get_token_ready(t_token *head);
 void	remove_quotes(t_token *head);
 void	add_env(t_data *data, char **envp);
+void	free_all(t_data *data);
 
 /*
 	nodes handling
@@ -105,7 +107,7 @@ void	cmd_exit(t_token *head);
 void	cmd_export(t_token *head, t_data *data);
 void	cmd_pwd(t_token *head);
 void	cmd_unset(t_token *head, t_data *data);
-void	exec_cmd(char *av, char **envp);
+void	exec_cmd(char *av, char **envp, t_data *data);
 
 /*
 	execution
@@ -121,9 +123,8 @@ void	check(char **envp, char *args);
 char	*check_absolute_path(char *av, char **envp);
 void	exec_cmd_withoutpipe(t_token *head, char *av, char **envp);
 void	exec_cmd_absolutepath_withoutpipe(char *av, char **envp);
-void	exec_cmd(char *av, char **envp);
 void	create_pipes(int (*fd)[2], int n);
-void	child_process(int i, int (*fd)[2], t_exec *exec);
+void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data);
 void	exec_pipes(char **cmds, t_data *data, int numofcmd);
 void	start_pipes(t_token *head, t_data *data, int numofpipes);
 void	start_execution(t_token *head, t_data *data);
@@ -164,5 +165,6 @@ char	*get_var_name(char *s, size_t d_index);
 void	update_quote_state(char c, t_quote_state *state);
 void	check_for_buildins(t_token *head, t_data *data);
 char	*find_var_value(char *var_name, char *envp[]);
+void    free_string_array(char **arr);
 
 #endif

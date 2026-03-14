@@ -18,22 +18,23 @@ void	add_env(t_data *data, char **envp)
 	int	j;
 
 	i = 0;
-	while (envp && envp[i])
+	while (envp && envp[i] != NULL)
 		i++;
 	if (getenv("USER") == NULL)
-	{
 		i++;
-		j++;
-	}
 	data->envp = ft_calloc(i + 1, sizeof * data->envp);
+	if (!data->envp)
+		exit_shell("Memory allocation error");
 	j = 0;
-	while (envp[j])
+	while (envp && envp[j])
 	{
 		data->envp[j] = ft_strdup(envp[j]);
+		if (!data->envp[j])
+			exit_shell("Memory allocation error");
 		j++;
 	}
 	if (getenv("USER") == NULL)
-		data->envp[0] = ft_strdup("USER=guest");
+		data->envp[j] = ft_strdup("USER=guest");
 }
 
 /*
@@ -93,7 +94,7 @@ t_token	*read_tokens(char *input)
 
 	i = 0;
 	head = NULL;
-	while (input[i] || (i == 0 && !head))
+	while (1)
 	{
 		token = read_token(input, &i);
 		if (!token)
@@ -111,12 +112,16 @@ void	input_handler(t_data *data, char **envp)
 	head = read_tokens(data->user_input);
 	if (!head)
 		return ;
+	data->head = head;
 	define_tokens_type(head);
-	if (syntax_error(head))
-		return (free_tokens(&head));
-	if (expand_variables(head, data->envp, data))
-		return (free_tokens(&head));
+	if (syntax_error(head) || expand_variables(head, data->envp, data))
+	{
+		free_tokens(&(data->head));
+		data->head = NULL;
+		return ;
+	}
 	remove_quotes(head);
-	start_execution(head, data);
-	free_tokens(&head);
+	start_execution(data->head, data);
+	free_tokens(&(data->head));
+	data->head = NULL;
 }

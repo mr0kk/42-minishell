@@ -54,6 +54,7 @@ void	check_for_buildins(t_token *head, t_data *data)
 int	check_command(char **ep, char *cmd)
 {
 	char	**env_paths;
+	char	*found_path;
 
 	while (*ep)
 	{
@@ -64,11 +65,17 @@ int	check_command(char **ep, char *cmd)
 	env_paths = ft_split(*ep + 5, ':');
 	if (return_path(env_paths, cmd) == 0)
 	{
-		free(env_paths);
+		free_string_array(env_paths);
 		return (1);
 	}
 	else
+	{
+		found_path = return_path(env_paths, cmd);
+		if (found_path)
+			free(found_path);
+		free_string_array(env_paths);
 		return (0);
+	}
 }
 
 char	*check_absolute_path(char *av, char **envp)
