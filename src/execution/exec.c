@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	create_pipes(int (*fd)[2], int n)
+static int	create_pipes(int (*fd)[2], int n)
 {
 	int	i;
 
@@ -20,12 +20,21 @@ void	create_pipes(int (*fd)[2], int n)
 	while (i < n)
 	{
 		if (pipe(fd[i]) == -1)
-			exit(1);
+		{
+			perror("pipe error");
+			while (--i >= 0)
+			{
+				close(fd[i][0]);
+				close(fd[i][1]);
+			}
+			return (-1);
+		}
 		i++;
 	}
+	return (0);
 }
 
-void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
+static void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 {
 	char	**args;
 	char	**clean_args;
@@ -86,7 +95,11 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 		fd = malloc(sizeof(int [2]) * exec.numofpipes);
 		if (!fd)
 			return ;
-		create_pipes(fd, exec.numofpipes);
+		if (create_pipes(fd, exec.numofpipes) == -1)
+		{
+			free(fd);
+			return ;
+		}
 	}
 	else
 		fd = NULL;
@@ -112,9 +125,6 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	}
 	while (waitpid(-1, NULL, 0) > 0)
 		continue ;
-	// if (fd)
-	// 	free(fd);
-	// waitpid(pid, NULL, 0);
 }
 
 void	start_pipes(t_token *head, t_data *data, int numofpipes)

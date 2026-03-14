@@ -74,8 +74,17 @@ int	exec_cmd(char *av, char **envp, t_data *data)
 	char	**clean_args;
 	char	*path;
 
+	if (!av || !av[0])
+		return (0);
 	args = ft_split(av, ' ');
 	clean_args = handle_redirections(args);
+	if (!clean_args || !clean_args[0])
+	{
+		free_string_array(args);
+		if (clean_args)
+			free_string_array(clean_args);
+		return (0);
+	}
 	if (check_command(envp, clean_args[0]))
 	{
 		printf("wrong command\n");
