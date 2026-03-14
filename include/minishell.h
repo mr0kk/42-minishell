@@ -131,6 +131,7 @@ void	start_execution(t_token *head, t_data *data);
 void	ignore_signals_in_parent(void);
 void	default_signals_in_child(void);
 void	handle_signals(int sig);
+void	exec_single_command(t_token *head, t_data *data);
 void	init_signals(void);
 char	**handle_redirections(char **args);
 
