@@ -46,3 +46,9 @@ void    free_string_array(char **arr)
 		free(arr);
 	}
 }
+
+void	free_all(t_data *data)
+{
+	free_env(data);
+	free_tokens(&(data->head));
+}

@@ -1,7 +1,61 @@
-Makefile
-include
-minishell
-test.txt
-test2.txt
-test3.txt
-test4.txt
+1. Testy Pustych Znaków i Śmieci (Parser)
+Zaskakująco dużo programów wysypuje się na... niczym.
+
+Wciśnięcie samego Entera: minishell$ [ENTER] (Czy pętla główna zwalnia pamięć i pyta o komendę ponownie?)
+
+Tylko spacje/tabulatory: minishell$        [ENTER] (Czy parser dobrze ignoruje białe znaki bez alokacji pustych tokenów?)
+
+Puste cudzysłowy: "" lub '' lub "" '' "" (Powinno zwrócić błąd "command not found", ale nie wyciekać!)
+
+2. Błędy Składniowe (Syntax Errors)
+Tuż po wpisaniu tekstu parser powinien go odrzucić i zwolnić stworzoną listę.
+
+Rura na początku: | ls
+
+Rura na końcu: ls |
+
+Podwójna rura: ls || grep m
+
+Sieroty redyrekcji: >, <, >> (to ten przypadek, który przed chwilą zlokalizowaliśmy!)
+
+3. Testy Zmiennych Środowiskowych (Expander)
+Rozwijanie zmiennych ($) to fabryka wycieków pamięci, bo często alokujesz nowy string zastępujący stary i zapominasz zwolnić ten pierwszy.
+
+Nieistniejąca zmienna: echo $NIE_MA_TAKIEJ_ZMIENNEJ (Powinno wypisać pustą linię. Czy stara nazwa została zwolniona?)
+
+Sklejanie zmiennych: echo "$USER"'$USER' (Powinno wypisać np. radek$USER. Bardzo trudne dla parsera!)
+
+Zmienna jako komenda: export A="ls -l" a potem wpisz po prostu $A.
+
+Test kodu wyjścia: ls | grem m, a następnie echo $?. (Powinno wypisać 127).
+
+4. Piekło Wbudowanych Poleceń (Built-ins)
+Wbudowane polecenia operują bezpośrednio na Twojej tablicy środowiskowej data->envp.
+
+Test komendy cd: cd .., a potem pwd.
+
+Gdzie jest wyciek: cd musi zaktualizować zmienne PWD oraz OLDPWD w środowisku. Jeśli wywalisz stary string ze środowiska i włożysz nowy PWD=/nowy/folder, czy zwolniłeś free() to stare PWD?
+
+Test wielokrotnego export: export A=1, potem export A=2. (Czy wartość "1" została zwolniona z pamięci?).
+
+Test unset: unset PATH, a potem wpisz ls. (Powinno zablokować komendę, bo usunąłeś systemową ścieżkę. Ale czy unset poprawnie skurczyło tablicę envp i zrobiło free na starym stringu PATH=...?).
+
+5. Największy boss: Heredoc (<<)
+Heredoc otwiera zupełnie nową pętlę readline wewnątrz potoku.
+
+Wpisz: << EOF cat
+
+Pojawi się prompt > . Wpisz linia 1, linia 2.
+
+Zamiast wpisywać EOF, wciśnij nagle Ctrl+C albo Ctrl+D.
+
+Gdzie jest wyciek: Heredoc w 42 zazwyczaj zapisuje dane do tymczasowego pliku (lub do rury). Jeśli przerwiesz go sygnałem, czy plik został usunięty, a pętla czytająca poprawnie zwolniła ostatnio wpisany bufor z readline?
+
+6. Brutalne Testy Sygnałów (Signals)
+Sygnały potrafią zabić proces zanim zdąży on dojść do Twoich funkcji zwalniających pamięć.
+
+Wpisz komendę, która "wisi" w nieskończoność: cat (bez argumentów) albo sleep 10.
+
+Wciśnij Ctrl+C. (Powinno wyrzucić Cię do nowego promptu. Zrób exit i sprawdź Valgrinda - czy sklonowane dzieci posprzątały zanim zabił je sygnał SIGINT?).
+
+W czystym prompcie minishell$ nic nie wpisuj, tylko wciśnij Ctrl+D. Shell powinien się wyłączyć (symuluje komendę exit). Czy t_data z maina zostało poprawnie zwolnione na samym końcu?

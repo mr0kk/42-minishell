@@ -28,7 +28,7 @@
 # define PATH 4020
 
 extern int	g_signal_pid;
-
+// int	g_signal_pid = 0;
 /*
 	structures
 */

@@ -83,12 +83,6 @@ void free_env(t_data *data)
 	data->envp = NULL;
 }
 
-void	free_all(t_data *data)
-{
-	free_env(data);
-	free_tokens(&(data->head));
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;

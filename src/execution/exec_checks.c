@@ -12,6 +12,69 @@
 
 #include "minishell.h"
 
+static bool	is_redir(t_token_type type)
+{
+	return (type == FROM_FILE || type == REPLACE
+		|| type == ADD_END || type == HEREDOC);
+}
+
+static bool	is_builtin(t_token *token)
+{
+	if (!token || token->type != CMD)
+		return (false);
+	if (ft_strncmp(token->token, "cd", 3) == 0)
+		return (true);
+	if (ft_strncmp(token->token, "echo", 5) == 0)
+		return (true);
+	if (ft_strncmp(token->token, "env", 4) == 0)
+		return (true);
+	if (ft_strncmp(token->token, "export", 7) == 0)
+		return (true);
+	if (ft_strncmp(token->token, "pwd", 4) == 0)
+		return (true);
+	if (ft_strncmp(token->token, "unset", 6) == 0)
+		return (true);
+	if (ft_strncmp(token->token, "exit", 5) == 0)
+		return (true);
+	return (false);
+}
+
+static int	apply_redirections(t_token *head)
+{
+	t_token	*curr;
+	int		fd;
+	int		flags;
+
+	curr = head;
+	while (curr)
+	{
+		if (is_redir(curr->type) && curr->next)
+		{
+			if (curr->type == REPLACE || curr->type == ADD_END)
+			{
+				flags = O_WRONLY | O_CREAT;
+				if (curr->type == REPLACE)
+					flags |= O_TRUNC;
+				else
+					flags |= O_APPEND;
+				fd = open(curr->next->token, flags, 0644);
+				if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1)
+					return (perror("minishell"), 1);
+				close(fd);
+			}
+			else if (curr->type == FROM_FILE)
+			{
+				fd = open(curr->next->token, O_RDONLY);
+				if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
+					return (perror("minishell"), 1);
+				close(fd);
+			}
+		}
+		curr = curr->next;
+	}
+	return (0);
+}
+
 int	check_for_pipes(t_token *head)
 {
 	t_token	*current;
@@ -46,6 +109,40 @@ void	check_for_buildins(t_token *head, t_data *data)
 		cmd_exit(head);
 	// else if (ft_strncmp(head->token, "/", 1) == 0)
 	// 	exec_cmd_absolutepath_withoutpipe(head->token, data->envp);
+	int	stdout_backup;
+	int	stdin_backup;
+
+	if (is_builtin(head))
+	{
+		stdout_backup = dup(STDOUT_FILENO);
+		stdin_backup = dup(STDIN_FILENO);
+		if (apply_redirections(head) != 0)
+		{
+			dup2(stdin_backup, STDIN_FILENO);
+			dup2(stdout_backup, STDOUT_FILENO);
+			close(stdin_backup);
+			close(stdout_backup);
+			return ;
+		}
+		if (ft_strncmp(head->token, "cd", 3) == 0)
+			cmd_cd(head);
+		else if (ft_strncmp(head->token, "echo", 5) == 0)
+			cmd_echo(head);
+		else if (ft_strncmp(head->token, "env", 4) == 0)
+			cmd_env(data);
+		else if (ft_strncmp(head->token, "export", 7) == 0)
+			cmd_export(head, data);
+		else if (ft_strncmp(head->token, "pwd", 4) == 0)
+			cmd_pwd(head);
+		else if (ft_strncmp(head->token, "unset", 6) == 0)
+			cmd_unset(head, data);
+		else if (ft_strncmp(head->token, "exit", 5) == 0)
+			cmd_exit(head);
+		dup2(stdin_backup, STDIN_FILENO);
+		dup2(stdout_backup, STDOUT_FILENO);
+		close(stdin_backup);
+		close(stdout_backup);
+	}
 	else
 		exec_single_command(head, data);
 	// else

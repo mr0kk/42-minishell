@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+static bool	is_redir(t_token_type type)
+{
+	return (type == FROM_FILE || type == REPLACE
+		|| type == ADD_END || type == HEREDOC);
+}
+
 /*
 	function checks syntax errors related to pipes
 	return 1 when error happen
@@ -35,16 +41,14 @@ bool	syntax_error_pipe(t_token *current)
 */
 bool	syntax_error_redir(t_token *current)
 {
-	if ((current->type == FROM_FILE || current->type == REPLACE)
-		&& !current->next)
-		return (exit_syntax_error(current->token));
-	if ((current->type == FROM_FILE || current->type == REPLACE)
-		&& current->next && current->next->type == PIPE)
-		return (exit_syntax_error(current->token));
-	if ((current->type == FROM_FILE || current->type == REPLACE)
-		&& current->next && (current->next->type == FROM_FILE
-			|| current->next->type == REPLACE))
-		return (exit_syntax_error(current->token));
+	if (is_redir(current->type) && !current->next)
+		return (exit_syntax_error("newline"));
+	if (is_redir(current->type) && current->next
+		&& current->next->type == PIPE)
+		return (exit_syntax_error(current->next->token));
+	if (is_redir(current->type) && current->next
+		&& is_redir(current->next->type))
+		return (exit_syntax_error(current->next->token));
 	return (0);
 }
 
