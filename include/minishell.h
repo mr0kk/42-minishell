@@ -168,5 +168,6 @@ void	update_quote_state(char c, t_quote_state *state);
 void	check_for_buildins(t_token *head, t_data *data);
 char	*find_var_value(char *var_name, char *envp[]);
 void    free_string_array(char **arr);
+void	free_env(t_data *data);
 
 #endif

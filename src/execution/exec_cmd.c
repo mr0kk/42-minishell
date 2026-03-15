@@ -46,22 +46,21 @@ void	exec_single_command(t_token *head, t_data *data)
 		exit(exit_code);
 	}
 	ignore_signals_in_parent();
-	waitpid(pid, &status, 0);
+	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		data->last_exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)
-		{
-			data->last_exit_code = 130;
 			printf("\n");
-		}
 		else if (WTERMSIG(status) == SIGQUIT)
-		{
-			data->last_exit_code = 131;
 			printf("Quit (core dumped)\n");
-		}
 		data->last_exit_code = 128 + WTERMSIG(status);
+	}
+	else if (WIFSTOPPED(status))
+	{
+		printf("\n");
+		data->last_exit_code = 128 + WSTOPSIG(status);
 	}
 	free_string_array(cmds);
 }

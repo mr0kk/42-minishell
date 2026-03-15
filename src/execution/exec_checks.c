@@ -93,22 +93,6 @@ int	check_for_pipes(t_token *head)
 
 void	check_for_buildins(t_token *head, t_data *data)
 {
-	if (ft_strncmp(head->token, "cd", 3) == 0)
-		cmd_cd(head);
-	else if (ft_strncmp(head->token, "echo", 5) == 0)
-		cmd_echo(head);
-	else if (ft_strncmp(head->token, "env", 4) == 0)
-		cmd_env(data);
-	else if (ft_strncmp(head->token, "export", 7) == 0)
-		cmd_export(head, data);
-	else if (ft_strncmp(head->token, "pwd", 4) == 0)
-		cmd_pwd(head);
-	else if (ft_strncmp(head->token, "unset", 6) == 0)
-		cmd_unset(head, data);
-	else if (ft_strncmp(head->token, "exit", 5) == 0)
-		cmd_exit(head);
-	// else if (ft_strncmp(head->token, "/", 1) == 0)
-	// 	exec_cmd_absolutepath_withoutpipe(head->token, data->envp);
 	int	stdout_backup;
 	int	stdin_backup;
 
@@ -145,36 +129,7 @@ void	check_for_buildins(t_token *head, t_data *data)
 	}
 	else
 		exec_single_command(head, data);
-	// else
-		// exec_cmd_withoutpipe(head, head->token, data->envp);
 }
-
-// int	check_command(char **ep, char *cmd)
-// {
-// 	char	**env_paths;
-// 	char	*found_path;
-
-// 	while (*ep)
-// 	{
-// 		if (ft_strncmp(*ep, "PATH", 4) == 0)
-// 			break ;
-// 		ep++;
-// 	}
-// 	env_paths = ft_split(*ep + 5, ':');
-// 	if (return_path(env_paths, cmd) == 0)
-// 	{
-// 		free_string_array(env_paths);
-// 		return (1);
-// 	}
-// 	else
-// 	{
-// 		found_path = return_path(env_paths, cmd);
-// 		if (found_path)
-// 			free(found_path);
-// 		free_string_array(env_paths);
-// 		return (0);
-// 	}
-// }
 
 char	*check_absolute_path(char *av, char **envp)
 {

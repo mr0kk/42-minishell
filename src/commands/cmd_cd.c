@@ -20,5 +20,7 @@ void	cmd_cd(t_token *head)
 	if (!head)
 		return ;
 	tmp = head->next;
+	if (!tmp)
+		return ;
 	chdir(tmp->token);
 }

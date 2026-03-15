@@ -52,3 +52,17 @@ void	free_all(t_data *data)
 	free_env(data);
 	free_tokens(&(data->head));
 }
+
+void free_env(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (data->envp[i])
+	{
+		free(data->envp[i]);
+		i++;
+	}
+	free(data->envp);
+	data->envp = NULL;
+}

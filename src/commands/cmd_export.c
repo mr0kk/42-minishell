@@ -19,8 +19,10 @@ int	get_index_export(char **envp, char *var)
 	char	*tmp;
 
 	j = 0;
-	while (var[j] != '=')
+	while (var[j] && var[j] != '=')
 		j++;
+	if (var[j] != '=')
+		return (-1);
 	tmp = ft_substr(var, 0, j + 1);
 	i = 0;
 	while (envp[i])
@@ -40,11 +42,41 @@ void	cmd_export(t_token *head, t_data *data)
 {
 	t_token	*tmp;
 	int		i;
+	int		count;
+	char	**new_envp;
 
 	if (!head)
 		return ;
 	tmp = head->next;
-	i = get_index_export(data->envp, tmp->token);
-	if (i != -1)
-		data->envp[i] = ft_strdup(tmp->token);
+	while (tmp)
+	{
+		if (ft_strchr(tmp->token, '='))
+		{
+			i = get_index_export(data->envp, tmp->token);
+			if (i != -1)
+			{
+				free(data->envp[i]);
+				data->envp[i] = ft_strdup(tmp->token);
+			}
+			else
+			{
+				count = 0;
+				while (data->envp[count])
+					count++;
+				new_envp = ft_calloc(count + 2, sizeof(char *));
+				if (!new_envp)
+					exit_shell("Memory allocation error");
+				i = 0;
+				while (i < count)
+				{
+					new_envp[i] = data->envp[i];
+					i++;
+				}
+				new_envp[i] = ft_strdup(tmp->token);
+				free(data->envp);
+				data->envp = new_envp;
+			}
+		}
+		tmp = tmp->next;
+	}
 }

@@ -84,6 +84,8 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	int		(*fd)[2];
 	int		pid;
 	int		i;
+	int		status;
+	int		last_status;
 	t_exec	exec;
 
 	exec.cmds = cmds;
@@ -123,8 +125,28 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 		}
 		free(fd);
 	}
-	while (waitpid(-1, NULL, 0) > 0)
-		continue ;
+	i = 0;
+	while (i < numofcmd)
+	{
+		waitpid(-1, &status, WUNTRACED);
+		last_status = status;
+		i++;
+	}
+	if (WIFEXITED(status))
+		data->last_exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(last_status))
+	{
+		if (WTERMSIG(last_status) == SIGINT)
+			printf("\n");
+		else if (WTERMSIG(last_status) == SIGQUIT)
+			printf("Quit (core dumped)\n");
+		data->last_exit_code = 128 + WTERMSIG(last_status);
+	}
+	else if (WIFSTOPPED(last_status))
+	{
+		printf("\n");
+		data->last_exit_code = 128 + WSTOPSIG(last_status);
+	}
 }
 
 void	start_pipes(t_token *head, t_data *data, int numofpipes)

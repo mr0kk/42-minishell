@@ -69,20 +69,6 @@ void	minishell_interactive(t_data *data)
 	}
 }
 
-void free_env(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (data->envp[i])
-	{
-		free(data->envp[i]);
-		i++;
-	}
-	free(data->envp);
-	data->envp = NULL;
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
