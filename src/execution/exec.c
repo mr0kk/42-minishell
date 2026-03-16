@@ -79,6 +79,33 @@ static void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 	exit(err_code);
 }
 
+void	handle_processes(t_data *data, t_exec *exec, int (*fd)[2])
+{
+	int	i;
+	int	pid;
+
+	i = 0;
+	while (i < exec->numofcmd)
+	{
+		pid = fork();
+		if (pid == 0)
+			child_process(i, fd, exec, data);
+		ignore_signals_in_parent();
+		i++;
+	}
+	if (exec->numofpipes > 0)
+	{
+		i = 0;
+		while (i < exec->numofpipes)
+		{
+			close(fd[i][0]);
+			close(fd[i][1]);
+			i++;
+		}
+		free(fd);
+	}
+}
+
 void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 {
 	int		(*fd)[2];
@@ -105,26 +132,27 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	}
 	else
 		fd = NULL;
-	i = 0;
-	while (i < numofcmd)
-	{
-		pid = fork();
-		if (pid == 0)
-			child_process(i, fd, &exec, data);
-		ignore_signals_in_parent();
-		i++;
-	}
-	if (exec.numofpipes > 0)
-	{
-		i = 0;
-		while (i < exec.numofpipes)
-		{
-			close(fd[i][0]);
-			close(fd[i][1]);
-			i++;
-		}
-		free(fd);
-	}
+	handle_processes(data, &exec, fd);
+	// i = 0;
+	// while (i < numofcmd)
+	// {
+	// 	pid = fork();
+	// 	if (pid == 0)
+	// 		child_process(i, fd, &exec, data);
+	// 	ignore_signals_in_parent();
+	// 	i++;
+	// }
+	// if (exec.numofpipes > 0)
+	// {
+	// 	i = 0;
+	// 	while (i < exec.numofpipes)
+	// 	{
+	// 		close(fd[i][0]);
+	// 		close(fd[i][1]);
+	// 		i++;
+	// 	}
+	// 	free(fd);
+	// }
 	i = 0;
 	while (i < numofcmd)
 	{

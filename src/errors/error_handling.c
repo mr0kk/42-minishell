@@ -29,8 +29,6 @@ bool	quote_error(t_quote_state *state)
 
 void	exit_shell(char *message)
 {
-	// printf("minishell[TEST]: %s\n", message);
 	perror(message);
-	// free_all(data);
 	exit(1);
 }

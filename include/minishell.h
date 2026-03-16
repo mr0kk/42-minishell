@@ -139,6 +139,7 @@ ssize_t	read_line(char *buffer, size_t size);
 // int		ft_strcmp(const char *s1, const char *s2);
 int		process_all_heredocs(t_token *head);
 void	cleanup_heredocs(void);
+void	put_ft_util(int fd, char *line);
 
 /*
 	errors

@@ -91,15 +91,6 @@ char	**get_cmds(t_token *head, int numofcmds)
 	return (cmds);
 }
 
-// void	check(char **envp, char *args)
-// {
-// 	if (check_command(envp, args))
-// 	{
-// 		printf("wrong command %s\n", args);
-// 		free(args);
-// 		exit(1);
-// 	}
-// }
 
 char	**handle_redirections(char **args)
 {

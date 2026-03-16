@@ -85,7 +85,6 @@ char	*read_token(char *input, int *index)
 	creating tokens
 	returns head element of linked list
 */
-
 t_token	*read_tokens(char *input)
 {
 	char	*token;
