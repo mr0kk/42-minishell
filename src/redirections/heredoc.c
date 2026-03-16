@@ -1,62 +1,92 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/07 13:51:34 by ajurczyk          #+#    #+#             */
-/*   Updated: 2026/03/07 20:36:20 by ajurczyk         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-// np cat << EOF - wprowadza blok tekstu jako wejście programu
+void	cleanup_heredocs(void)
+{
+	unlink(".heredoc_tmp");
+}
 
-// void	redir_heredoc(t_token *head, t_data *data)
-// {
-// 	int pipes[2];
-// 	int pid;
-// 	char **parts;
-// 	char buffer[PATH];
-// 	ssize_t len;
+static void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	g_signal_pid = 130;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
+}
 
-// 	parts = get_redir_parts(head);
-// 	if (pipe(pipes) == -1)
-// 	{
-// 		printf("error pipe");
-// 		exit(1);
-// 	}
-// 	pid = fork();
-// 	if (pid < 0)
-// 	{
-// 		printf("error fork");
-// 		exit(1);
-// 	}
-// 	if (pid == 0)
-// 	{
-// 		close(pipes[1]);
-// 		dup2(pipes[0], STDIN_FILENO);
-// 		close(pipes[0]);
-// 		exec_cmd_redir(parts[0], data->envp);
-// 	}
-// 	else
-// 	{
-// 		close(pipes[0]);
-// 		while (1)
-// 		{
-// 			write(STDOUT_FILENO, "heredoc> ", 9);
-// 			len = read_line(buffer, PATH);
-// 			if (len <= 0)
-// 				break;
-// 			buffer[len] = '\0';
-// 			if(ft_strcmp(buffer, parts[1]) == 0);
-// 				break;
-// 			write(pipes[1], buffer, len);
-// 			write(pipes[1], "\n", 1);
-// 		}
-// 		close(pipes[1]);
-// 		waitpid(pid, NULL, 0);
-// 	}
-// }
+int	read_heredoc(char *delimeter, int fd, char *line)
+{
+	int		stdin_backup;
+
+	signal(SIGINT, heredoc_sigint_handler);
+	stdin_backup = dup(STDIN_FILENO);
+	while (1)
+	{
+		line = readline("> ");
+		if (g_signal_pid == 130)
+		{
+			if (line)
+				free(line);
+			dup2(stdin_backup, STDIN_FILENO);
+			close(stdin_backup);
+			return (-1);
+		}
+		if (!line || ft_strncmp(line, delimeter, ft_strlen(delimeter) + 1) == 0)
+		{
+			if (line)
+				free(line);
+			break;
+		}
+		put_ft_util(fd, line);
+	}
+	close(stdin_backup);
+	return (0);
+}
+
+int	process_heredoc(t_token *heredoc_node)
+{
+	char	*delimeter;
+	char	*line;
+	int		fd;
+
+	if (!heredoc_node->next)
+		return (-1);
+	delimeter = heredoc_node->next->token;
+	fd = open(".heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+		return (-1);
+	if (read_heredoc(delimeter, fd, line) == -1)
+	{
+		close(fd);
+		return (-1);
+	}
+	close(fd);
+	heredoc_node->type = FROM_FILE;
+	free(heredoc_node->token);
+	heredoc_node->token = ft_strdup("<");
+	free(heredoc_node->next->token);
+	heredoc_node->next->token = ft_strdup(".heredoc_tmp");
+	return (0);
+}
+
+/*
+	returns -1 if heredoc stopped by ctrl-C
+*/
+int	process_all_heredocs(t_token *head)
+{
+	t_token	*current;
+
+	g_signal_pid = 0;
+	current = head;
+
+	while (current)
+	{
+		if (current->type == HEREDOC)
+		{
+			if (process_heredoc(current) == -1)
+				return (-1);
+		}
+		current = current->next;
+	}
+	ignore_signals_in_parent();
+	return (0);
+}

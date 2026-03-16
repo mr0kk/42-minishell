@@ -43,7 +43,6 @@ char	*create_exp_str(char *old_s, char *var_n, char *var_val, size_t d_i)
 	function takes token with $ in it and its index
 	and returns new one with expaned variable
 */
-
 char	*replace_var(char *s, size_t *d_i, char *envp[], t_data *data)
 {
 	char	*new_s;

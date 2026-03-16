@@ -57,16 +57,9 @@ ssize_t	read_line(char *buffer, size_t size)
 	return (i);
 }
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	put_ft_util(int fd, char *line)
 {
-	size_t	i;
-
-	i = 0;
-	while (s1[i] != '\0' || s2[i] != '\0')
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
+	ft_putstr_fd(line, fd);
+	ft_putstr_fd("\n", fd);
+	free(line);
 }

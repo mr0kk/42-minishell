@@ -121,7 +121,14 @@ void	input_handler(t_data *data, char **envp)
 		return ;
 	}
 	remove_quotes(head);
+	if (process_all_heredocs(data->head) == -1)
+	{
+		free_tokens(&(data->head));
+		data->head = NULL;
+		return ;
+	}
 	start_execution(data->head, data);
+	cleanup_heredocs();
 	free_tokens(&(data->head));
 	data->head = NULL;
 }

@@ -74,7 +74,10 @@ static int	apply_redirections(t_token *head)
 	}
 	return (0);
 }
-
+/*
+	this function returns number of pipes
+	in the user input
+*/
 int	check_for_pipes(t_token *head)
 {
 	t_token	*current;

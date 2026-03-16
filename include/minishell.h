@@ -115,16 +115,9 @@ int		exec_cmd(char *av, char **envp, t_data *data);
 int		check_for_type(t_token *current, t_token *head, t_data *data);
 int		check_for_pipes(t_token *head);
 void	check_for_buildins(t_token *head, t_data *data);
-// int		check_command(char **ep, char *cmd);
 char	*return_path(char **env_paths, char *cmd);
 char	*get_path(char **ep, char *cmd);
 char	**get_cmds(t_token *head, int numofcmds);
-// void	check(char **envp, char *args);
-// char	*check_absolute_path(char *av, char **envp);
-// void	exec_cmd_withoutpipe(t_token *head, char *av, char **envp);
-// void	exec_cmd_absolutepath_withoutpipe(char *av, char **envp);
-// void	create_pipes(int (*fd)[2], int n);
-// void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data);
 void	exec_pipes(char **cmds, t_data *data, int numofcmd);
 void	start_pipes(t_token *head, t_data *data, int numofpipes);
 void	start_execution(t_token *head, t_data *data);
@@ -141,10 +134,11 @@ void	exec_single_command(t_token *head, t_data *data);
 */
 int		redir_add_replace(char **args, int i);
 int		redir_from_file(char **args, int i);
-void	redir_heredoc(t_token *head, t_data *data);
 char	**get_redir_parts(t_token *head);
 ssize_t	read_line(char *buffer, size_t size);
-int		ft_strcmp(const char *s1, const char *s2);
+// int		ft_strcmp(const char *s1, const char *s2);
+int		process_all_heredocs(t_token *head);
+void	cleanup_heredocs(void);
 
 /*
 	errors
