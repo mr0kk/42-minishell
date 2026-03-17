@@ -12,33 +12,6 @@
 
 #include "minishell.h"
 
-static bool	is_redir(t_token_type type)
-{
-	return (type == FROM_FILE || type == REPLACE
-		|| type == ADD_END || type == HEREDOC);
-}
-
-static bool	is_builtin(t_token *token)
-{
-	if (!token || token->type != CMD)
-		return (false);
-	if (ft_strncmp(token->token, "cd", 3) == 0)
-		return (true);
-	if (ft_strncmp(token->token, "echo", 5) == 0)
-		return (true);
-	if (ft_strncmp(token->token, "env", 4) == 0)
-		return (true);
-	if (ft_strncmp(token->token, "export", 7) == 0)
-		return (true);
-	if (ft_strncmp(token->token, "pwd", 4) == 0)
-		return (true);
-	if (ft_strncmp(token->token, "unset", 6) == 0)
-		return (true);
-	if (ft_strncmp(token->token, "exit", 5) == 0)
-		return (true);
-	return (false);
-}
-
 static int	setup_redir_fd(t_token *curr)
 {
 	int	fd;
@@ -81,26 +54,6 @@ static int	apply_redirections(t_token *head)
 		curr = curr->next;
 	}
 	return (0);
-}
-
-/*
-	this function returns number of pipes
-	in the user input
-*/
-int	check_for_pipes(t_token *head)
-{
-	t_token	*current;
-	int		numofpipes;
-
-	current = head;
-	numofpipes = 0;
-	while (current)
-	{
-		if (current->type == PIPE)
-			numofpipes++;
-		current = current->next;
-	}
-	return (numofpipes);
 }
 
 int	run_correct_cmd(t_token *head, t_data *data)

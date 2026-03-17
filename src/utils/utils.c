@@ -12,14 +12,6 @@
 
 #include "minishell.h"
 
-bool	is_separator(char c)
-{
-	return (c == ' ' || c == '\t');
-}
-
-/*
-	helper function for freeing stings
-*/
 char	*free_vars(char	*a, char *b, char *c)
 {
 	if (a)
@@ -65,4 +57,14 @@ void	free_env(t_data *data)
 	}
 	free(data->envp);
 	data->envp = NULL;
+}
+
+void	free_2arrays_and_str(char **arr1, char **arr2, char *str)
+{
+	if (arr1)
+		free_string_array(arr1);
+	if (arr2)
+		free_string_array(arr2);
+	if (str)
+		free(str);
 }

@@ -12,38 +12,6 @@
 
 #include "minishell.h"
 
-void	free_2arrays_and_str(char **arr1, char **arr2, char *str)
-{
-	if (arr1)
-		free_string_array(arr1);
-	if (arr2)
-		free_string_array(arr2);
-	if (str)
-		free(str);
-}
-
-static void	wait_single_child(pid_t pid, t_data *data)
-{
-	int	status;
-
-	waitpid(pid, &status, WUNTRACED);
-	if (WIFEXITED(status))
-		data->last_exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGINT)
-			printf("\n");
-		else if (WTERMSIG(status) == SIGQUIT)
-			printf("Quit (core dumped)\n");
-		data->last_exit_code = 128 + WTERMSIG(status);
-	}
-	else if (WIFSTOPPED(status))
-	{
-		printf("\n");
-		data->last_exit_code = 128 + WSTOPSIG(status);
-	}
-}
-
 static void	execute_single_child(char **cmds, t_data *data)
 {
 	int	exit_code;

@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+bool	is_redir(t_token_type type)
+{
+	return (type == FROM_FILE || type == REPLACE
+		|| type == ADD_END || type == HEREDOC);
+}
+
 char	*return_path(char **env_paths, char *cmd)
 {
 	char	*path;
@@ -88,7 +94,7 @@ char	**handle_redirections(char **args)
 	int		j;
 	char	**clean;
 
-	clean = malloc(sizeof(char *) * 100); // no free after this malloc
+	clean = malloc(sizeof(char *) * 100); // check if is free after that
 	i = 0;
 	j = 0;
 	while (args[i])

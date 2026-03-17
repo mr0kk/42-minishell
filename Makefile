@@ -14,6 +14,7 @@ SRC = main.c \
 		parsing/variable_expansion.c \
 		parsing/quotes_removing.c \
 		utils/utils.c \
+		utils/utils_v2.c \
 		utils/var_expansion_utils.c \
 		commands/cmd_cd.c \
 		commands/cmd_echo.c \
@@ -25,6 +26,7 @@ SRC = main.c \
 		execution/exec.c \
 		execution/exec_cmd.c \
 		execution/exec_checks.c \
+		execution/child_handling.c \
 		execution/exec_utils.c \
 		errors/syntax_handling.c \
 		errors/error_handling.c \

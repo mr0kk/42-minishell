@@ -128,6 +128,6 @@ void	input_handler(t_data *data)
 		return ;
 	}
 	start_execution(data->head, data);
-	cleanup_heredocs();
+	unlink(".heredoc_tmp");
 	free_tokens(&(data->head));
 }

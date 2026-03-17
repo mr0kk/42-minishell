@@ -20,9 +20,9 @@ int	g_signal_pid = 0;
 	in case of 3 args sets to run noninteractive minishell
 	otherwise gives usegage error
 */
-int	input_check(t_data *data, int argc)
+int	input_check(t_data *data, int argc, char **argv)
 {
-	if (argc == 1)
+	if (argc == 1 && argv[0])
 		data->interative = 1;
 	else if (argc == 3)
 		data->interative = 0;
@@ -42,7 +42,6 @@ void	free_data(t_data *data)
 	func handle instruction given in input line then frees
 	memory after proceding input
 */
-
 void	minishell_interactive(t_data *data)
 {
 	while (1)
@@ -69,27 +68,16 @@ void	minishell_interactive(t_data *data)
 	}
 }
 
-// void	minishell_noninteractive(t_data *data, char *input)
-// {
-// 	data->user_input = ft_strdup(input);
-// 	if (!data->user_input)
-// 		exit_shell("Memory allocation error");
-// 	input_handler(data);
-// 	free(data->user_input);
-// }
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
 	data.last_exit_code = 0;
 	add_env(&data, envp);
-	if (!input_check(&data, argc))
+	if (!input_check(&data, argc, argv))
 		exit_shell("Wrong usage");
 	if (data.interative)
 		minishell_interactive(&data);
-	// else
-	// 	minishell_noninteractive(&data, argv[1]);
 	rl_clear_history();
 	free_env(&data);
 	return (0);

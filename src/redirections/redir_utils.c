@@ -63,3 +63,19 @@ void	put_ft_util(int fd, char *line)
 	ft_putstr_fd("\n", fd);
 	free(line);
 }
+
+void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	g_signal_pid = 130;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
+}
+
+int	abort_heredoc(int stdin_backup, char *line)
+{
+	free(line);
+	dup2(stdin_backup, STDIN_FILENO);
+	close(stdin_backup);
+	return (-1);
+}

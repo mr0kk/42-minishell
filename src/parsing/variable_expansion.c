@@ -17,8 +17,6 @@
 */
 char	*create_exp_str(char *old_s, char *var_n, char *var_val, size_t d_i)
 {
-	size_t	i;
-	size_t	val_i;
 	size_t	new_len;
 	char	*new_s;
 
@@ -26,27 +24,9 @@ char	*create_exp_str(char *old_s, char *var_n, char *var_val, size_t d_i)
 	new_s = (char *)malloc((new_len + 1) * sizeof(char));
 	if (!new_s)
 		return (NULL);
-	i = 0;
-	while (old_s[i] && i < d_i)
-	{
-		new_s[i] = old_s[i];
-		i++;
-	}
-	val_i = 0;
-	while (var_val[val_i])
-	{
-		new_s[i] = var_val[val_i];
-		i++;
-		val_i++;
-	}
-	d_i = d_i + 1 + ft_strlen(var_n);
-	while (old_s[d_i])
-	{
-		new_s[i] = old_s[d_i];
-		i++;
-		d_i++;
-	}
-	new_s[i] = '\0';
+	ft_strlcpy(new_s, old_s, d_i + 1);
+	ft_strlcat(new_s, var_val, new_len + 1);
+	ft_strlcat(new_s, old_s + d_i + 1 + ft_strlen(var_n), new_len + 1);
 	return (new_s);
 }
 

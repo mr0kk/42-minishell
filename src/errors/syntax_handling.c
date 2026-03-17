@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-static bool	is_redir(t_token_type type)
-{
-	return (type == FROM_FILE || type == REPLACE
-		|| type == ADD_END || type == HEREDOC);
-}
-
 /*
 	function checks syntax errors related to pipes
 	return 1 when error happen

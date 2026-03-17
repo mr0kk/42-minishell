@@ -1,19 +1,6 @@
 
 #include "minishell.h"
 
-void	cleanup_heredocs(void)
-{
-	unlink(".heredoc_tmp");
-}
-
-static void	heredoc_sigint_handler(int sig)
-{
-	(void)sig;
-	g_signal_pid = 130;
-	write(1, "\n", 1);
-	close(STDIN_FILENO);
-}
-
 static char	*expand_heredoc_line(char *line, t_data *data)
 {
 	size_t	i;
@@ -64,14 +51,6 @@ static int	check_and_remove_quotes(t_token *node)
 		}
 	}
 	return (expand);
-}
-
-static int	abort_heredoc(int stdin_backup, char *line)
-{
-	free(line);
-	dup2(stdin_backup, STDIN_FILENO);
-	close(stdin_backup);
-	return (-1);
 }
 
 int	read_heredoc(char *delimeter, int fd, t_data *data, int expand)

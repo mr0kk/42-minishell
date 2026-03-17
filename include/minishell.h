@@ -34,11 +34,11 @@ extern int	g_signal_pid;
 */
 typedef struct s_data
 {
-	bool	interative;
-	char	*user_input;
-	char	**envp;
-	int		last_exit_code;
-	struct s_token *head;
+	bool			interative;
+	char			*user_input;
+	char			**envp;
+	int				last_exit_code;
+	struct s_token	*head;
 }	t_data;
 
 typedef enum e_quote_state
@@ -127,9 +127,14 @@ void	ignore_signals_in_parent(void);
 void	default_signals_in_child(void);
 void	handle_signals(int sig);
 void	init_signals(void);
+bool	is_redir(t_token_type type);
 char	**handle_redirections(char **args);
 void	exec_single_command(t_token *head, t_data *data);
 void	exec_single_command(t_token *head, t_data *data);
+void	wait_for_children(t_data *data, int numofcmd, int last_pid);
+void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data);
+void	setup_child_pipes(int i, int (*fd)[2], t_exec *exec);
+void	wait_single_child(pid_t pid, t_data *data);
 
 /*
 	redirections
@@ -141,6 +146,8 @@ ssize_t	read_line(char *buffer, size_t size);
 int		process_all_heredocs(t_token *head, t_data *data);
 void	cleanup_heredocs(void);
 void	put_ft_util(int fd, char *line);
+void	heredoc_sigint_handler(int sig);
+int		abort_heredoc(int stdin_backup, char *line);
 
 /*
 	errors
@@ -163,7 +170,9 @@ char	*get_var_name(char *s, size_t d_index);
 void	update_quote_state(char c, t_quote_state *state);
 void	check_for_buildins(t_token *head, t_data *data);
 char	*find_var_value(char *var_name, char *envp[]);
-void    free_string_array(char **arr);
+void	free_string_array(char **arr);
+void	free_2arrays_and_str(char **arr1, char **arr2, char *str);
 void	free_env(t_data *data);
+bool	is_builtin(t_token *token);
 
 #endif
