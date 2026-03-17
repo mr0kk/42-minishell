@@ -2,3 +2,5 @@
 minishell$ echo "lo'o'adhwad'"'ahydw"'$USE'R"yuawg'
 lo'o'adhwad'ahydw"=rmrokR"yuawg
 
+2.
+valgrind --memcheck:leak-check=full --track-origins=yes --trace-children=yes --show-reachable=yes --log-file=valgrind.log ./minishell

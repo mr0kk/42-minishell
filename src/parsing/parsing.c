@@ -6,7 +6,7 @@
 /*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 13:51:08 by ajurczyk          #+#    #+#             */
-/*   Updated: 2026/03/17 15:20:59 by rmrok            ###   ########.fr       */
+/*   Updated: 2026/03/17 16:57:02 by rmrok            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,12 @@ void	input_handler(t_data *data)
 		free_tokens(&(data->head));
 		data->head = NULL;
 		return ;
+	}
+	t_token *curr = head;
+	while (curr)
+	{
+		printf("%s: type: %d\n", curr->token, curr->type);
+		curr = curr->next;
 	}
 	start_execution(data->head, data);
 	unlink(".heredoc_tmp");
