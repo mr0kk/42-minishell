@@ -116,8 +116,8 @@ char	*check_absolute_path(char *av, char **envp)
 	while (args[i])
 		i++;
 	temp = ft_strdup(args[i - 1]);
-	free_string_array(args);
-	arg0 = get_path(envp, temp);
+	args = ft_split(temp, ' ');
+	arg0 = get_path(envp, args[0]);
 	av = ft_strtrim(av, " ");
 	if (!ft_strncmp(av, arg0, ft_strlen(arg0)))
 		return (temp);
@@ -125,6 +125,7 @@ char	*check_absolute_path(char *av, char **envp)
 	{
 		printf("no such file or directory: %s", av);
 		free(temp);
+		free(args);
 		free(arg0);
 		exit (1);
 	}

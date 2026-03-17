@@ -135,6 +135,7 @@ void	wait_for_children(t_data *data, int numofcmd, int last_pid);
 void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data);
 void	setup_child_pipes(int i, int (*fd)[2], t_exec *exec);
 void	wait_single_child(pid_t pid, t_data *data);
+char	**split_quotes(char const *s);
 
 /*
 	redirections

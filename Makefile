@@ -28,6 +28,7 @@ SRC = main.c \
 		execution/exec_checks.c \
 		execution/child_handling.c \
 		execution/exec_utils.c \
+		execution/quotes_split.c \
 		errors/syntax_handling.c \
 		errors/error_handling.c \
 		errors/error_messages.c \

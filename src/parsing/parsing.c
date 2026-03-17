@@ -119,13 +119,21 @@ void	input_handler(t_data *data)
 		data->head = NULL;
 		return ;
 	}
-	remove_quotes(head);
+	// "echo test"
+	// remove_quotes(head);
+	// echo test
 	if (process_all_heredocs(data->head, data) == -1)
 	{
 		data->last_exit_code = 130;
 		free_tokens(&(data->head));
 		data->head = NULL;
-		return ;
+		return ;	
+	}
+	t_token *curr = head;
+	while (curr)
+	{
+		printf("%s: type: %d\n", curr->token, curr->type);
+		curr = curr->next;
 	}
 	start_execution(data->head, data);
 	unlink(".heredoc_tmp");
