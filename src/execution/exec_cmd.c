@@ -13,29 +13,56 @@
 #include "minishell.h"
 
 static void	execute_single_child(char **cmds, t_data *data)
+/*
+	The child process now receives a proper argv array from get_cmds.
+	The logic from the old `exec_cmd` function is moved here.
+*/
+static void	execute_single_child(char **argv, t_data *data)
 {
 	int	exit_code;
+	char	*path;
+	char	**clean_argv;
 
 	default_signals_in_child();
 	if (!cmds[0])
+	if (!argv || !argv[0])
 	{
 		free_string_array(cmds);
+		if (argv)
+			free_string_array(argv);
 		free_all(data);
 		exit(0);
 	}
 	exit_code = exec_cmd(cmds[0], data->envp, data);
 	free_string_array(cmds);
+	clean_argv = handle_redirections(argv);
+	free_string_array(argv);
+	path = get_valid_path(clean_argv, data->envp);
+	if (!path)
+	{
+		free_string_array(clean_argv);
+		free_all(data);
+		exit(127);
+	}
+	execve(path, clean_argv, data->envp);
+	perror("minishell");
+	free(path);
+	free_string_array(clean_argv);
 	free_all(data);
 	exit(exit_code);
+	exit(126);
 }
 
 void	exec_single_command(t_token *head, t_data *data)
 {
 	pid_t	pid;
 	char	**cmds;
+	char	**argv;
 
 	cmds = get_cmds(head, 1, 0);
 	if (!cmds)
+	argv = get_cmds(head, 1, 0);
+	if (!argv)
 		return ;
 	pid = fork();
 	if (pid == -1)
@@ -43,13 +70,16 @@ void	exec_single_command(t_token *head, t_data *data)
 		perror("fork");
 		data->last_exit_code = 1;
 		free_string_array(cmds);
+		free_string_array(argv);
 		return ;
 	}
 	if (pid == 0)
 		execute_single_child(cmds, data);
+		execute_single_child(argv, data);
 	ignore_signals_in_parent();
 	wait_single_child(pid, data);
 	free_string_array(cmds);
+	free_string_array(argv);
 }
 
 static char	*get_valid_path(char **clean_args, char **envp)
@@ -81,6 +111,7 @@ static char	*get_valid_path(char **clean_args, char **envp)
 	return (path);
 }
 
+/* This function is no longer needed because we don't re-split tokens. */
 static char	**prepare_args(char *av, char ***args)
 {
 	char	**clean_args;
@@ -104,6 +135,11 @@ static char	**prepare_args(char *av, char ***args)
 	return (clean_args);
 }
 
+/*
+	This function is no longer used for single commands. Its logic has been
+	moved into `execute_single_child`. It is still called by the pipe logic,
+	which is now broken and needs to be refactored.
+*/
 int	exec_cmd(char *av, char **envp, t_data *data)
 {
 	char	**args;

@@ -71,12 +71,14 @@ char	*get_var_name(char *s, size_t d_index)
 char	*find_var_value(char *var_name, char *envp[])
 {
 	size_t	i;
+	size_t	len;
 
 	i = 0;
+	len = ft_strlen(var_name);
 	while (envp[i])
 	{
-		if (!ft_strncmp(var_name, envp[i], ft_strlen(var_name)))
-			return (ft_strdup(envp[i] + ft_strlen(var_name) + 1));
+		if (!ft_strncmp(var_name, envp[i], len) && envp[i][len] == '=')
+			return (ft_strdup(envp[i] + len + 1));
 		i++;
 	}
 	return (ft_strdup(""));
