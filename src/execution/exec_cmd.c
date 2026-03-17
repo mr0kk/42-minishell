@@ -106,26 +106,62 @@ static char	**prepare_args(char *av)
 	return (clean_args);
 }
 
+static t_token	*argv_to_token_list(char **argv)
+{
+	t_token	*head;
+	t_token	*curr;
+	int		i;
+
+	head = NULL;
+	i = 0;
+	if (!argv || !argv[0])
+		return (NULL);
+	while (argv[i])
+		add_node(&head, argv[i++]);
+	if (head)
+	{
+		head->type = CMD;
+		curr = head->next;
+		while (curr)
+		{
+			curr->type = ARG;
+			curr = curr->next;
+		}
+	}
+	return (head);
+}
+
 int	exec_cmd(char *av, char **envp, t_data *data)
 {
 	char	**clean_args;
 	char	*path;
+	t_token	*temp_list;
+	int		exit_code;
 
-	(void)data;
 	clean_args = prepare_args(av);
 	if (!clean_args)
 		return (0);
 	remove_quotes(clean_args);
+	temp_list = argv_to_token_list(clean_args);
+	if (is_builtin(temp_list))
+	{
+		exit_code = run_correct_cmd(temp_list, data);
+		free_tokens(&temp_list);
+		free_string_array(clean_args);
+		return (exit_code);
+	}
+	free_tokens(&temp_list);
 	path = get_valid_path(clean_args, envp);
 	if (!path)
 	{
-		free_2arrays_and_str(NULL, clean_args, NULL);
+		free_string_array(clean_args);
 		return (127);
 	}
 	if (execve(path, clean_args, envp) == -1)
 	{
 		perror("minishell");
-		free_2arrays_and_str(NULL, clean_args, path);
+		free_string_array(clean_args);
+		free(path);
 		return (126);
 	}
 	return (0);

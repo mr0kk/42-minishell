@@ -12,37 +12,42 @@
 
 #include "minishell.h"
 
-static void	echo_printer(char *str)
+static bool	is_n_flag(const char *str)
 {
-	ft_putstr_fd(str, STDOUT_FILENO);
-	ft_putchar_fd(' ', STDOUT_FILENO);
+	size_t	i;
+
+	if (!str || str[0] != '-' || str[1] != 'n')
+		return (false);
+	i = 2;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 int	cmd_echo(t_token *head)
 {
-	t_token	*tmp;
+	t_token	*current;
+	bool	print_newline;
 
-	if (!head)
-		return (1);
-	tmp = head->next;
-	if (!tmp)
+	print_newline = true;
+	current = head->next;
+	while (current && current->type == ARG && is_n_flag(current->token))
 	{
+		print_newline = false;
+		current = current->next;
+	}
+	while (current && current->type == ARG)
+	{
+		ft_putstr_fd(current->token, STDOUT_FILENO);
+		if (current->next && current->next->type == ARG)
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		current = current->next;
+	}
+	if (print_newline)
 		ft_putchar_fd('\n', STDOUT_FILENO);
-		return (0);
-	}
-	if (!ft_strncmp(tmp->token, "-n", 3))
-	{
-		if (tmp->next)
-			ft_putstr_fd(tmp->next->token, STDOUT_FILENO);
-	}
-	else
-	{
-		while (tmp && tmp->type == ARG)
-		{
-			echo_printer(tmp->token);
-			tmp = tmp->next;
-		}
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	}
 	return (0);
 }

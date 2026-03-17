@@ -71,7 +71,7 @@ int	run_correct_cmd(t_token *head, t_data *data)
 	else if (ft_strncmp(head->token, "unset", 6) == 0)
 		return (cmd_unset(head, data));
 	else if (ft_strncmp(head->token, "exit", 5) == 0)
-		exit(0);
+		return (cmd_exit(head, data));
 	return (0);
 }
 
@@ -83,6 +83,7 @@ void	check_for_buildins(t_token *head, t_data *data)
 
 	if (is_builtin(head))
 	{
+		remove_quotes_from_tokens(head);
 		stdout_backup = dup(STDOUT_FILENO);
 		stdin_backup = dup(STDIN_FILENO);
 		if (apply_redirections(head) != 0)

@@ -17,6 +17,7 @@ SRC = main.c \
 		utils/utils_v2.c \
 		utils/var_expansion_utils.c \
 		commands/cmd_cd.c \
+		commands/cmd_exit.c \
 		commands/cmd_echo.c \
 		commands/cmd_env.c \
 		commands/cmd_export.c \

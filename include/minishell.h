@@ -87,7 +87,7 @@ void	define_tokens_type(t_token *head);
 bool	expand_variables(t_token *head, char **envp, t_data *data);
 char	*replace_var(char *s, size_t *d_i, char *envp[], t_data *data);
 void	get_token_ready(t_token *head);
-// void	remove_quotes(t_token *head);
+void	remove_quotes_from_tokens(t_token *head);
 void	remove_quotes(char **args);
 char	*handle_removing(char *old_token);
 void	add_env(t_data *data, char **envp);
@@ -106,10 +106,11 @@ void	free_tokens(t_token **head);
 int		cmd_cd(t_token *head);
 int		cmd_echo(t_token *head);
 int		cmd_env(t_data *data);
-void	cmd_exit(t_token *head);
+int		cmd_exit(t_token *head, t_data *data);
 int		cmd_export(t_token *head, t_data *data);
 int		cmd_pwd(t_token *head);
 int		cmd_unset(t_token *head, t_data *data);
+int		run_correct_cmd(t_token *head, t_data *data);
 int		exec_cmd(char *av, char **envp, t_data *data);
 
 /*

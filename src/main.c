@@ -23,12 +23,12 @@ int	g_signal_pid = 0;
 int	input_check(t_data *data, int argc, char **argv)
 {
 	if (argc == 1 && argv[0])
+	{
 		data->interative = 1;
-	else if (argc == 3)
-		data->interative = 0;
-	else
-		return (0);
-	return (1);
+		return (1);
+	}
+	data->interative = 0;
+	return (0);
 }
 
 void	free_data(t_data *data)
@@ -37,11 +37,6 @@ void	free_data(t_data *data)
 		free(data->user_input);
 }
 
-/*
-	runs interactiove verstion of minishell
-	func handle instruction given in input line then frees
-	memory after proceding input
-*/
 void	minishell_interactive(t_data *data)
 {
 	while (1)
@@ -57,12 +52,6 @@ void	minishell_interactive(t_data *data)
 		}
 		if (data->user_input[0] != '\0')
 			add_history(data->user_input);
-		if (!ft_strncmp(data->user_input, "exit", 5))
-		{
-			free(data->user_input);
-			rl_clear_history();
-			break ;
-		}
 		input_handler(data);
 		free(data->user_input);
 	}

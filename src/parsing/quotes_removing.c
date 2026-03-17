@@ -77,26 +77,26 @@ char	*handle_removing(char *old_token)
 	return (new_token);
 }
 
-// void	remove_quotes(t_token *head)
-// {
-// 	t_token	*current;
-// 	char	*clear_token;
+void	remove_quotes_from_tokens(t_token *head)
+{
+	t_token	*current;
+	char	*clear_token;
 
-// 	current = head;
-// 	while (current)
-// 	{
-// 		if (current->type == CMD || current->type == ARG)
-// 		{
-// 			clear_token = handle_removing(current->token);
-// 			if (clear_token)
-// 			{
-// 				free(current->token);
-// 				current->token = clear_token;
-// 			}
-// 		}
-// 		current = current->next;
-// 	}
-// }
+	current = head;
+	while (current)
+	{
+		if (current->type == CMD || current->type == ARG)
+		{
+			clear_token = handle_removing(current->token);
+			if (clear_token)
+			{
+				free(current->token);
+				current->token = clear_token;
+			}
+		}
+		current = current->next;
+	}
+}
 
 void	remove_quotes(char **args)
 {
