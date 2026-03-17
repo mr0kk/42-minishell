@@ -77,28 +77,41 @@ char	*handle_removing(char *old_token)
 	return (new_token);
 }
 
-/*
-	function iterates throught each token and calls function
-	that handle whole removing process for every CMD,
-	ARG or FILE_TOKEN token types
-*/
-void	remove_quotes(t_token *head)
+// void	remove_quotes(t_token *head)
+// {
+// 	t_token	*current;
+// 	char	*clear_token;
+
+// 	current = head;
+// 	while (current)
+// 	{
+// 		if (current->type == CMD || current->type == ARG)
+// 		{
+// 			clear_token = handle_removing(current->token);
+// 			if (clear_token)
+// 			{
+// 				free(current->token);
+// 				current->token = clear_token;
+// 			}
+// 		}
+// 		current = current->next;
+// 	}
+// }
+
+void	remove_quotes(char **args)
 {
-	t_token	*current;
+	int		i;
 	char	*clear_token;
 
-	current = head;
-	while (current)
+	i = 0;
+	while (args[i])
 	{
-		if (current->type == CMD || current->type == ARG)
+		clear_token = handle_removing(args[i]);
+		if (clear_token)
 		{
-			clear_token = handle_removing(current->token);
-			if (clear_token)
-			{
-				free(current->token);
-				current->token = clear_token;
-			}
+			free(args[i]);
+			args[i] = clear_token;
 		}
-		current = current->next;
+		i++;
 	}
 }

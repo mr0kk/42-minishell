@@ -129,12 +129,6 @@ void	input_handler(t_data *data)
 		data->head = NULL;
 		return ;	
 	}
-	t_token *curr = head;
-	while (curr)
-	{
-		printf("%s: type: %d\n", curr->token, curr->type);
-		curr = curr->next;
-	}
 	start_execution(data->head, data);
 	unlink(".heredoc_tmp");
 	free_tokens(&(data->head));

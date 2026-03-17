@@ -102,6 +102,7 @@ static char	**prepare_args(char *av)
 		free_2arrays_and_str(args, clean_args, NULL);
 		return (NULL);
 	}
+	free_string_array(args);
 	return (clean_args);
 }
 
@@ -114,6 +115,7 @@ int	exec_cmd(char *av, char **envp, t_data *data)
 	clean_args = prepare_args(av);
 	if (!clean_args)
 		return (0);
+	remove_quotes(clean_args);
 	path = get_valid_path(clean_args, envp);
 	if (!path)
 	{

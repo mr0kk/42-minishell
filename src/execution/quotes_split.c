@@ -69,6 +69,13 @@ char	**split_quotes(char const *s)
 	while (i < words)
 	{
 		res[i] = extract_word(s, &j);
+		if (!res[i])
+		{
+			while (i > 0)
+				free(res[--i]);
+			free(res);
+			return (NULL);
+		}
 		i++;
 	}
 	res[i] = NULL;
