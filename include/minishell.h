@@ -85,8 +85,10 @@ int		input_valid(t_data *data, int argc, char **argv);
 void	input_handler(t_data *data, char **envp);
 void	define_tokens_type(t_token *head);
 bool	expand_variables(t_token *head, char **envp, t_data *data);
+char	*replace_var(char *s, size_t *d_i, char *envp[], t_data *data);
 void	get_token_ready(t_token *head);
 void	remove_quotes(t_token *head);
+char	*handle_removing(char *old_token);
 void	add_env(t_data *data, char **envp);
 void	free_all(t_data *data);
 
@@ -136,8 +138,7 @@ int		redir_add_replace(char **args, int i);
 int		redir_from_file(char **args, int i);
 char	**get_redir_parts(t_token *head);
 ssize_t	read_line(char *buffer, size_t size);
-// int		ft_strcmp(const char *s1, const char *s2);
-int		process_all_heredocs(t_token *head);
+int		process_all_heredocs(t_token *head, t_data *data);
 void	cleanup_heredocs(void);
 void	put_ft_util(int fd, char *line);
 
