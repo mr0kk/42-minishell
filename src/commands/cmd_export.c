@@ -38,12 +38,39 @@ int	get_index_export(char **envp, char *var)
 	return (-1);
 }
 
-void	cmd_export(t_token *head, t_data *data)
+static void	update_or_add_env(t_data *data, char *token)
 {
-	t_token	*tmp;
 	int		i;
 	int		count;
 	char	**new_envp;
+
+	i = get_index_export(data->envp, token);
+	if (i != -1)
+	{
+		free(data->envp[i]);
+		data->envp[i] = ft_strdup(token);
+		return ;
+	}
+	count = 0;
+	while (data->envp[count])
+		count++;
+	new_envp = ft_calloc(count + 2, sizeof(char *));
+	if (!new_envp)
+		exit_shell("Memory allocation error");
+	i = 0;
+	while (i < count)
+	{
+		new_envp[i] = data->envp[i];
+		i++;
+	}
+	new_envp[i] = ft_strdup(token);
+	free(data->envp);
+	data->envp = new_envp;
+}
+
+void	cmd_export(t_token *head, t_data *data)
+{
+	t_token	*tmp;
 
 	if (!head)
 		return ;
@@ -51,32 +78,7 @@ void	cmd_export(t_token *head, t_data *data)
 	while (tmp)
 	{
 		if (ft_strchr(tmp->token, '='))
-		{
-			i = get_index_export(data->envp, tmp->token);
-			if (i != -1)
-			{
-				free(data->envp[i]);
-				data->envp[i] = ft_strdup(tmp->token);
-			}
-			else
-			{
-				count = 0;
-				while (data->envp[count])
-					count++;
-				new_envp = ft_calloc(count + 2, sizeof(char *));
-				if (!new_envp)
-					exit_shell("Memory allocation error");
-				i = 0;
-				while (i < count)
-				{
-					new_envp[i] = data->envp[i];
-					i++;
-				}
-				new_envp[i] = ft_strdup(tmp->token);
-				free(data->envp);
-				data->envp = new_envp;
-			}
-		}
+			update_or_add_env(data, tmp->token);
 		tmp = tmp->next;
 	}
 }

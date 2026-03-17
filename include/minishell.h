@@ -117,7 +117,7 @@ int		check_for_pipes(t_token *head);
 void	check_for_buildins(t_token *head, t_data *data);
 char	*return_path(char **env_paths, char *cmd);
 char	*get_path(char **ep, char *cmd);
-char	**get_cmds(t_token *head, int numofcmds);
+char	**get_cmds(t_token *head, int numofcmds, int i);
 void	exec_pipes(char **cmds, t_data *data, int numofcmd);
 void	start_pipes(t_token *head, t_data *data, int numofpipes);
 void	start_execution(t_token *head, t_data *data);

@@ -49,30 +49,21 @@ char	*get_path(char **ep, char *cmd)
 	if (!*ep)
 		return (NULL);
 	env_paths = ft_split(*ep + 5, ':');
-	// if (return_path(env_paths, cmd) == 0)
-	// {
-	// 	free(env_paths);
-	// 	return (0);
-	// }
-	// else
-	// 	return (return_path(env_paths, cmd));
 	path = return_path(env_paths, cmd);
 	free_string_array(env_paths);
 	return (path);
 }
 
-char	**get_cmds(t_token *head, int numofcmds)
+char	**get_cmds(t_token *head, int numofcmds, int i)
 {
 	t_token	*curr;
 	char	**cmds;
-	int		i;
 	char	*tmp;
 
 	curr = head; 
 	cmds = (char **)ft_calloc(numofcmds + 1, sizeof(char *));
 	if (!cmds)
 		return (NULL);
-	i = 0;
 	while (curr)
 	{
 		if (curr->type != PIPE)

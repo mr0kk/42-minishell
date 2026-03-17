@@ -34,41 +34,35 @@ static int	create_pipes(int (*fd)[2], int n)
 	return (0);
 }
 
+static void	setup_child_pipes(int i, int (*fd)[2], t_exec *exec)
+{
+	int	j;
+
+	if (i > 0 && dup2(fd[i - 1][0], STDIN_FILENO) == -1)
+	{
+		perror("Error on dup2 input");
+		exit(EXIT_FAILURE);
+	}
+	if (i < exec->numofpipes && dup2(fd[i][1], STDOUT_FILENO) == -1)
+	{
+		perror("Error on dup2 output");
+		exit(EXIT_FAILURE);
+	}
+	j = 0;
+	while (exec->numofpipes > 0 && j < exec->numofpipes)
+	{
+		close(fd[j][0]);
+		close(fd[j][1]);
+		j++;
+	}
+}
+
 static void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 {
-	char	**args;
-	char	**clean_args;
-	char	*path;
 	int		err_code;
-	int		j;
 
 	default_signals_in_child();
-	if (i > 0)
-	{
-		if (dup2(fd[i - 1][0], STDIN_FILENO) == -1)
-		{
-			perror("Error on dup2 input");
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (i < exec->numofpipes)
-	{
-		if (dup2(fd[i][1], STDOUT_FILENO) == -1)
-		{
-			perror("Error on dup2 output");
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (exec->numofpipes > 0)
-	{
-		j = 0;
-		while (j < exec->numofpipes)
-		{
-			close(fd[j][0]);
-			close(fd[j][1]);
-			j++;
-		}
-	}
+	setup_child_pipes(i, fd, exec);
 	err_code = exec_cmd(exec->cmds[i], exec->envp, data);
 	if (exec->cmds)
 		free_string_array(exec->cmds);
@@ -106,54 +100,11 @@ void	handle_processes(t_data *data, t_exec *exec, int (*fd)[2])
 	}
 }
 
-void	exec_pipes(char **cmds, t_data *data, int numofcmd)
+static void	wait_for_children(t_data *data, int numofcmd, int i)
 {
-	int		(*fd)[2];
-	int		pid;
-	int		i;
-	int		status;
-	int		last_status;
-	t_exec	exec;
+	int	status;
+	int	last_status;
 
-	exec.cmds = cmds;
-	exec.envp = data->envp;
-	exec.numofcmd = numofcmd;
-	exec.numofpipes = numofcmd - 1;
-	if (exec.numofpipes > 0)
-	{
-		fd = malloc(sizeof(int [2]) * exec.numofpipes);
-		if (!fd)
-			return ;
-		if (create_pipes(fd, exec.numofpipes) == -1)
-		{
-			free(fd);
-			return ;
-		}
-	}
-	else
-		fd = NULL;
-	handle_processes(data, &exec, fd);
-	// i = 0;
-	// while (i < numofcmd)
-	// {
-	// 	pid = fork();
-	// 	if (pid == 0)
-	// 		child_process(i, fd, &exec, data);
-	// 	ignore_signals_in_parent();
-	// 	i++;
-	// }
-	// if (exec.numofpipes > 0)
-	// {
-	// 	i = 0;
-	// 	while (i < exec.numofpipes)
-	// 	{
-	// 		close(fd[i][0]);
-	// 		close(fd[i][1]);
-	// 		i++;
-	// 	}
-	// 	free(fd);
-	// }
-	i = 0;
 	while (i < numofcmd)
 	{
 		waitpid(-1, &status, WUNTRACED);
@@ -177,12 +128,37 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 	}
 }
 
+void	exec_pipes(char **cmds, t_data *data, int numofcmd)
+{
+	int		(*fd)[2];
+	t_exec	exec;
+
+	exec.cmds = cmds;
+	exec.envp = data->envp;
+	exec.numofcmd = numofcmd;
+	exec.numofpipes = numofcmd - 1;
+	fd = NULL;
+	if (exec.numofpipes > 0)
+	{
+		fd = malloc(sizeof(int [2]) * exec.numofpipes);
+		if (!fd)
+			return ;
+		if (create_pipes(fd, exec.numofpipes) == -1)
+		{
+			free(fd);
+			return ;
+		}
+	}
+	handle_processes(data, &exec, fd);
+	wait_for_children(data, numofcmd, 0);
+}
+
 void	start_pipes(t_token *head, t_data *data, int numofpipes)
 {
 	char	**cmds;
 	int		i;
 
-	cmds = get_cmds(head, numofpipes + 1);
+	cmds = get_cmds(head, numofpipes + 1, 0);
 	if (!cmds)
 		return ;
 	exec_pipes(cmds, data, numofpipes + 1);
