@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 SRC_PATH = ./src/
 OBJ_PATH = ./obj/
@@ -18,7 +18,6 @@ SRC = main.c \
 		commands/cmd_cd.c \
 		commands/cmd_echo.c \
 		commands/cmd_env.c \
-		commands/cmd_exit.c \
 		commands/cmd_export.c \
 		commands/cmd_pwd.c \
 		commands/cmd_unset.c \

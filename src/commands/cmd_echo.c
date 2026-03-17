@@ -12,18 +12,27 @@
 
 #include "minishell.h"
 
-void	cmd_echo(t_token *head)
+int	cmd_echo(t_token *head)
 {
 	t_token	*tmp;
 
 	if (!head)
-		return ;
+		return (1);
 	tmp = head->next;
+	if (!tmp)
+	{
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		return (0);
+	}
 	if (!ft_strncmp(tmp->token, "-n", 3))
-		ft_putstr_fd(tmp->next->token, STDOUT_FILENO);
+	{
+		if (tmp->next)
+			ft_putstr_fd(tmp->next->token, STDOUT_FILENO);
+	}
 	else
 	{
 		ft_putstr_fd(tmp->token, STDOUT_FILENO);
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	}
+	return (0);
 }

@@ -1,3 +1,4 @@
+
 #include "minishell.h"
 
 void	cleanup_heredocs(void)
@@ -65,6 +66,14 @@ static int	check_and_remove_quotes(t_token *node)
 	return (expand);
 }
 
+static int	abort_heredoc(int stdin_backup, char *line)
+{
+	free(line);
+	dup2(stdin_backup, STDIN_FILENO);
+	close(stdin_backup);
+	return (-1);
+}
+
 int	read_heredoc(char *delimeter, int fd, t_data *data, int expand)
 {
 	int		stdin_backup;
@@ -76,17 +85,10 @@ int	read_heredoc(char *delimeter, int fd, t_data *data, int expand)
 	{
 		line = readline("> ");
 		if (g_signal_pid == 130)
-		{
-			if (line)
-				free(line);
-			dup2(stdin_backup, STDIN_FILENO);
-			close(stdin_backup);
-			return (-1);
-		}
+			return (abort_heredoc(stdin_backup, line));
 		if (!line || ft_strncmp(line, delimeter, ft_strlen(delimeter) + 1) == 0)
 		{
-			if (line)
-				free(line);
+			free(line);
 			break ;
 		}
 		if (expand)

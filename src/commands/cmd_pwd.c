@@ -12,11 +12,18 @@
 
 #include "minishell.h"
 
-void	cmd_pwd(t_token *head)
+int	cmd_pwd(t_token *head)
 {
 	char	buff[PATH];
 	char	*cwd;
 
+	(void)head;
 	cwd = getcwd(buff, PATH);
+	if (!cwd)
+	{
+		perror("pwd");
+		return (1);
+	}
 	ft_putendl_fd(cwd, STDOUT_FILENO);
+	return (0);
 }

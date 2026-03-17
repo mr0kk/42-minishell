@@ -28,13 +28,24 @@ char	*create_exp_str(char *old_s, char *var_n, char *var_val, size_t d_i)
 		return (NULL);
 	i = 0;
 	while (old_s[i] && i < d_i)
-		new_s[i++] = old_s[i];
+	{
+		new_s[i] = old_s[i];
+		i++;
+	}
 	val_i = 0;
 	while (var_val[val_i])
-		new_s[i++] = var_val[val_i++];
+	{
+		new_s[i] = var_val[val_i];
+		i++;
+		val_i++;
+	}
 	d_i = d_i + 1 + ft_strlen(var_n);
 	while (old_s[d_i])
-		new_s[i++] = old_s[d_i++];
+	{
+		new_s[i] = old_s[d_i];
+		i++;
+		d_i++;
+	}
 	new_s[i] = '\0';
 	return (new_s);
 }
@@ -48,9 +59,7 @@ char	*replace_var(char *s, size_t *d_i, char *envp[], t_data *data)
 	char	*new_s;
 	char	*var_n;
 	char	*var_val;
-	size_t	i;
 
-	i = *d_i;
 	var_n = get_var_name(s, *d_i);
 	if (!var_n)
 		return (free_vars(var_n, NULL, NULL));

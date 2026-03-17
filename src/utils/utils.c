@@ -31,7 +31,7 @@ char	*free_vars(char	*a, char *b, char *c)
 	return (NULL);
 }
 
-void    free_string_array(char **arr)
+void	free_string_array(char **arr)
 {
 	int	i;
 
@@ -53,7 +53,7 @@ void	free_all(t_data *data)
 	free_tokens(&(data->head));
 }
 
-void free_env(t_data *data)
+void	free_env(t_data *data)
 {
 	int	i;
 

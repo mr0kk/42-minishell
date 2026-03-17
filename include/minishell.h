@@ -82,7 +82,7 @@ typedef struct s_exec
 	parsing
 */
 int		input_valid(t_data *data, int argc, char **argv);
-void	input_handler(t_data *data, char **envp);
+void	input_handler(t_data *data);
 void	define_tokens_type(t_token *head);
 bool	expand_variables(t_token *head, char **envp, t_data *data);
 char	*replace_var(char *s, size_t *d_i, char *envp[], t_data *data);
@@ -102,13 +102,13 @@ void	free_tokens(t_token **head);
 /*
 	commands
 */
-void	cmd_cd(t_token *head);
-void	cmd_echo(t_token *head);
-void	cmd_env(t_data *data);
+int		cmd_cd(t_token *head);
+int		cmd_echo(t_token *head);
+int		cmd_env(t_data *data);
 void	cmd_exit(t_token *head);
-void	cmd_export(t_token *head, t_data *data);
-void	cmd_pwd(t_token *head);
-void	cmd_unset(t_token *head, t_data *data);
+int		cmd_export(t_token *head, t_data *data);
+int		cmd_pwd(t_token *head);
+int		cmd_unset(t_token *head, t_data *data);
 int		exec_cmd(char *av, char **envp, t_data *data);
 
 /*

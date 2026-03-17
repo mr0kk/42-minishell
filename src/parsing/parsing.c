@@ -54,7 +54,6 @@ void	skip_separators(char *input, int *index)
 char	*read_token(char *input, int *index)
 {
 	int		start;
-	char	*res_token;
 	char	quote_type;
 
 	skip_separators(input, index);
@@ -104,7 +103,7 @@ t_token	*read_tokens(char *input)
 	return (head);
 }
 
-void	input_handler(t_data *data, char **envp)
+void	input_handler(t_data *data)
 {
 	t_token	*head;
 
@@ -115,6 +114,7 @@ void	input_handler(t_data *data, char **envp)
 	define_tokens_type(head);
 	if (syntax_error(head) || expand_variables(head, data->envp, data))
 	{
+		data->last_exit_code = 2;
 		free_tokens(&(data->head));
 		data->head = NULL;
 		return ;
@@ -122,6 +122,7 @@ void	input_handler(t_data *data, char **envp)
 	remove_quotes(head);
 	if (process_all_heredocs(data->head, data) == -1)
 	{
+		data->last_exit_code = 130;
 		free_tokens(&(data->head));
 		data->head = NULL;
 		return ;
@@ -129,5 +130,4 @@ void	input_handler(t_data *data, char **envp)
 	start_execution(data->head, data);
 	cleanup_heredocs();
 	free_tokens(&(data->head));
-	data->head = NULL;
 }

@@ -69,11 +69,11 @@ static void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)
 	if (data)
 		free_all(data);
 	if (exec->numofpipes > 0 && fd)
-        free(fd);
+		free(fd);
 	exit(err_code);
 }
 
-void	handle_processes(t_data *data, t_exec *exec, int (*fd)[2])
+int	handle_processes(t_data *data, t_exec *exec, int (*fd)[2])
 {
 	int	i;
 	int	pid;
@@ -98,21 +98,26 @@ void	handle_processes(t_data *data, t_exec *exec, int (*fd)[2])
 		}
 		free(fd);
 	}
+	return (pid);
 }
 
-static void	wait_for_children(t_data *data, int numofcmd, int i)
+static void	wait_for_children(t_data *data, int numofcmd, int last_pid)
 {
+	int	i;
+	int	pid;
 	int	status;
 	int	last_status;
 
+	i = 0;
 	while (i < numofcmd)
 	{
-		waitpid(-1, &status, WUNTRACED);
-		last_status = status;
+		pid = waitpid(-1, &status, WUNTRACED);
+		if (pid == last_pid)
+			last_status = status;
 		i++;
 	}
-	if (WIFEXITED(status))
-		data->last_exit_code = WEXITSTATUS(status);
+	if (WIFEXITED(last_status))
+		data->last_exit_code = WEXITSTATUS(last_status);
 	else if (WIFSIGNALED(last_status))
 	{
 		if (WTERMSIG(last_status) == SIGINT)
@@ -132,6 +137,7 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 {
 	int		(*fd)[2];
 	t_exec	exec;
+	int		last_pid;
 
 	exec.cmds = cmds;
 	exec.envp = data->envp;
@@ -149,8 +155,8 @@ void	exec_pipes(char **cmds, t_data *data, int numofcmd)
 			return ;
 		}
 	}
-	handle_processes(data, &exec, fd);
-	wait_for_children(data, numofcmd, 0);
+	last_pid = handle_processes(data, &exec, fd);
+	wait_for_children(data, numofcmd, last_pid);
 }
 
 void	start_pipes(t_token *head, t_data *data, int numofpipes)

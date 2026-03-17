@@ -12,15 +12,19 @@
 
 #include "minishell.h"
 
-void	cmd_cd(t_token *head)
+int	cmd_cd(t_token *head)
 {
 	t_token	*tmp;
-	char	*path;
 
 	if (!head)
-		return ;
+		return (1);
 	tmp = head->next;
 	if (!tmp)
-		return ;
-	chdir(tmp->token);
+		return (0);
+	if (chdir(tmp->token) == -1)
+	{
+		perror("minishell: cd");
+		return (1);
+	}
+	return (0);
 }

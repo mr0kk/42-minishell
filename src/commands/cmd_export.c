@@ -38,9 +38,8 @@ int	get_index_export(char **envp, char *var)
 	return (-1);
 }
 
-static void	update_or_add_env(t_data *data, char *token)
+static void	update_or_add_env(t_data *data, char *token, int i)
 {
-	int		i;
 	int		count;
 	char	**new_envp;
 
@@ -68,17 +67,20 @@ static void	update_or_add_env(t_data *data, char *token)
 	data->envp = new_envp;
 }
 
-void	cmd_export(t_token *head, t_data *data)
+int	cmd_export(t_token *head, t_data *data)
 {
 	t_token	*tmp;
 
 	if (!head)
-		return ;
+		return (1);
 	tmp = head->next;
+	if (!tmp)
+		return (0);
 	while (tmp)
 	{
 		if (ft_strchr(tmp->token, '='))
-			update_or_add_env(data, tmp->token);
+			update_or_add_env(data, tmp->token, 0);
 		tmp = tmp->next;
 	}
+	return (0);
 }

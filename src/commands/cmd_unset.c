@@ -41,15 +41,18 @@ int	get_index_unset(char **envp, char *var)
 	return (-1);
 }
 
-void	cmd_unset(t_token *head, t_data *data)
+int	cmd_unset(t_token *head, t_data *data)
 {
 	t_token	*tmp;
 	int		i;
 
 	if (!head)
-		return ;
+		return (1);
 	tmp = head->next;
+	if (!tmp)
+		return (0);
 	i = get_index_unset(data->envp, tmp->token);
 	if (i != -1)
 		remove_env_var(data, i);
+	return (0);
 }

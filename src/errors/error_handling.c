@@ -29,6 +29,6 @@ bool	quote_error(t_quote_state *state)
 
 void	exit_shell(char *message)
 {
-	perror(message);
+	printf("Error: %s\n", message);
 	exit(1);
 }

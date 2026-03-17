@@ -60,7 +60,7 @@ char	**get_cmds(t_token *head, int numofcmds, int i)
 	char	**cmds;
 	char	*tmp;
 
-	curr = head; 
+	curr = head;
 	cmds = (char **)ft_calloc(numofcmds + 1, sizeof(char *));
 	if (!cmds)
 		return (NULL);
@@ -81,7 +81,6 @@ char	**get_cmds(t_token *head, int numofcmds, int i)
 	}
 	return (cmds);
 }
-
 
 char	**handle_redirections(char **args)
 {

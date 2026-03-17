@@ -20,7 +20,7 @@ int	g_signal_pid = 0;
 	in case of 3 args sets to run noninteractive minishell
 	otherwise gives usegage error
 */
-int	input_check(t_data *data, int argc, char **argv)
+int	input_check(t_data *data, int argc)
 {
 	if (argc == 1)
 		data->interative = 1;
@@ -64,10 +64,19 @@ void	minishell_interactive(t_data *data)
 			rl_clear_history();
 			break ;
 		}
-		input_handler(data, data->envp);
+		input_handler(data);
 		free(data->user_input);
 	}
 }
+
+// void	minishell_noninteractive(t_data *data, char *input)
+// {
+// 	data->user_input = ft_strdup(input);
+// 	if (!data->user_input)
+// 		exit_shell("Memory allocation error");
+// 	input_handler(data);
+// 	free(data->user_input);
+// }
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -75,10 +84,12 @@ int	main(int argc, char **argv, char **envp)
 
 	data.last_exit_code = 0;
 	add_env(&data, envp);
-	if (!input_check(&data, argc, argv))
+	if (!input_check(&data, argc))
 		exit_shell("Wrong usage");
 	if (data.interative)
 		minishell_interactive(&data);
+	// else
+	// 	minishell_noninteractive(&data, argv[1]);
 	rl_clear_history();
 	free_env(&data);
 	return (0);
