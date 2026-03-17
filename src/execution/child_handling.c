@@ -46,6 +46,12 @@ void	setup_child_pipes(int i, int (*fd)[2], t_exec *exec)
 	}
 }
 
+static void	uptade_status_and_newline(int last_status, t_data *data)
+{
+	printf("\n");
+	data->last_exit_code = 128 + WSTOPSIG(last_status);
+}
+
 void	wait_for_children(t_data *data, int numofcmd, int last_pid)
 {
 	int	i;
@@ -72,10 +78,7 @@ void	wait_for_children(t_data *data, int numofcmd, int last_pid)
 		data->last_exit_code = 128 + WTERMSIG(last_status);
 	}
 	else if (WIFSTOPPED(last_status))
-	{
-		printf("\n");
-		data->last_exit_code = 128 + WSTOPSIG(last_status);
-	}
+		uptade_status_and_newline(last_status, data);
 }
 
 void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data)

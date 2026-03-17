@@ -94,7 +94,7 @@ char	**handle_redirections(char **args)
 	int		j;
 	char	**clean;
 
-	clean = malloc(sizeof(char *) * 100); // check if is free after that
+	clean = malloc(sizeof(char *) * 100);
 	i = 0;
 	j = 0;
 	while (args[i])
