@@ -107,6 +107,14 @@ void	start_execution(t_token *head, t_data *data)
 {
 	int	numofpipes;
 
+	if (head && ft_strncmp(head->token, "\"\"", 3) == 0)
+	{
+		ft_putstr_fd("minishell: : command not found\n", 2);
+		data->last_exit_code = 127;
+		free_tokens(&(data->head));
+		data->head = NULL;
+		return ;
+	}
 	numofpipes = check_for_pipes(head);
 	if (numofpipes)
 		start_pipes(head, data, numofpipes);

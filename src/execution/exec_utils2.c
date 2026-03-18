@@ -11,8 +11,7 @@ char	*handle_nofile(char *path)
 	ft_putstr_fd(err_msg, 2);
 	free(tmp);
 	free(err_msg);
-	free(path);
-	return (NULL);
+	exit(127);
 }
 
 char	**prepare_args(char *av)
