@@ -9,9 +9,11 @@
 ## Instructions
 To compile program use 'make' then run minishell using: ./minishell
 
+<pre>
 ```bash
 make
 ./minishell
+</pre>
 
 
 ## Resources
