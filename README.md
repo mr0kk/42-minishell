@@ -12,7 +12,7 @@ To compile program use 'make' then run minishell using: ./minishell
 ```bash
 make
 ./minishell
-```
+
 
 ## Resources
 
