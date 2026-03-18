@@ -8,10 +8,11 @@
 
 ## Instructions
 To compile program use 'make' then run minishell using: ./minishell
-'''bash
+
+```bash
 make
 ./minishell
-'''
+```
 
 ## Resources
 
