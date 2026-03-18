@@ -54,9 +54,11 @@ int	cmd_exit(t_token *head, t_data *data)
 	}
 	if (!is_numeric(arg->token))
 	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(arg->token, 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
+		char *tmp = ft_strjoin("minishell: exit: ", arg->token);
+		char *err_msg = ft_strjoin(tmp, ": numeric argument required\n");
+		ft_putstr_fd(err_msg, 2);
+		free(tmp);
+		free(err_msg);
 		if (!is_piped)
 		{
 			free_all(data);

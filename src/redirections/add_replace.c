@@ -20,7 +20,18 @@ int	redir_add_replace(char **args, int i)
 		fd = open(args[i + 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else
 		fd = open(args[i + 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	dup2(fd, STDOUT_FILENO);
+	if (fd == -1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		perror(args[i + 1]);
+		return (-1);
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(fd);
+		return (-1);
+	}
 	close(fd);
 	return (i + 2);
 }

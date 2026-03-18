@@ -60,6 +60,14 @@ char	*read_token(char *input, int *index)
 	if (!input[*index])
 		return (NULL);
 	start = *index;
+	if (ft_strchr("<>|", input[start]))
+	{
+		(*index)++;
+		if ((input[start] == '<' && input[*index] == '<')
+			|| (input[start] == '>' && input[*index] == '>'))
+			(*index)++;
+		return (ft_substr(input, start, *index - start));
+	}
 	quote_type = 0;
 	while (input[*index])
 	{
@@ -70,7 +78,8 @@ char	*read_token(char *input, int *index)
 			else if (quote_type == input[*index])
 				quote_type = 0;
 		}
-		if (quote_type == 0 && is_separator(input[*index]))
+		if (quote_type == 0 && (is_separator(input[*index])
+				|| ft_strchr("<>|", input[*index])))
 			break ;
 		(*index)++;
 	}
@@ -119,9 +128,6 @@ void	input_handler(t_data *data)
 		data->head = NULL;
 		return ;
 	}
-	// "echo test"
-	// remove_quotes(head);
-	// echo test
 	if (process_all_heredocs(data->head, data) == -1)
 	{
 		data->last_exit_code = 130;

@@ -88,24 +88,54 @@ char	**get_cmds(t_token *head, int numofcmds, int i)
 	return (cmds);
 }
 
+static int	count_clean_args(char **args)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (args[i])
+	{
+		if (!ft_strncmp(args[i], ">>", 3) || !ft_strncmp(args[i], ">", 2)
+			|| !ft_strncmp(args[i], "<", 2))
+			i += 2;
+		else
+		{
+			count++;
+			i++;
+		}
+	}
+	return (count);
+}
+
 char	**handle_redirections(char **args)
 {
 	int		i;
 	int		j;
 	char	**clean;
 
-	clean = malloc(sizeof(char *) * 100);
+	clean = ft_calloc(count_clean_args(args) + 1, sizeof(char *));
+	if (!clean)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (args[i])
 	{
 		if (!ft_strncmp(args[i], ">>", 3) || !ft_strncmp(args[i], ">", 2))
+		{
 			i = redir_add_replace(args, i);
+			if (i == -1)
+				return (free_string_array(clean), NULL);
+		}
 		else if (!ft_strncmp(args[i], "<", 2))
+		{
 			i = redir_from_file(args, i);
+			if (i == -1)
+				return (free_string_array(clean), NULL);
+		}
 		else
 			clean[j++] = ft_strdup(args[i++]);
 	}
-	clean[j] = NULL;
 	return (clean);
 }

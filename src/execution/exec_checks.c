@@ -25,15 +25,27 @@ static int	setup_redir_fd(t_token *curr)
 		else
 			flags |= O_APPEND;
 		fd = open(curr->next->token, flags, 0644);
-		if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1)
-			return (perror("minishell"), 1);
+		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror(curr->next->token);
+			return (1);
+		}
+		if (dup2(fd, STDOUT_FILENO) == -1)
+			return (perror("minishell: dup2"), 1);
 		close(fd);
 	}
 	else if (curr->type == FROM_FILE)
 	{
 		fd = open(curr->next->token, O_RDONLY);
-		if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
-			return (perror("minishell"), 1);
+		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror(curr->next->token);
+			return (1);
+		}
+		if (dup2(fd, STDIN_FILENO) == -1)
+			return (perror("minishell: dup2"), 1);
 		close(fd);
 	}
 	return (0);
