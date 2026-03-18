@@ -17,6 +17,12 @@ bool	is_separator(char c)
 	return (c == ' ' || c == '\t');
 }
 
+void	skip_separators(char *input, int *index)
+{
+	while (input[*index] && is_separator(input[*index]))
+		(*index)++;
+}
+
 bool	is_builtin(t_token *token)
 {
 	if (!token || token->type != CMD)

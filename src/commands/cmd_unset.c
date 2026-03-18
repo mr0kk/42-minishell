@@ -74,7 +74,7 @@ int	cmd_unset(t_token *head, t_data *data)
 	while (tmp)
 	{
 		if (!is_valid_identifier(tmp->token))
-			unset_expoert_error(tmp->token, &exit_status, "unset");
+			unset_export_error(tmp->token, &exit_status, "unset");
 		else
 			handle_valid_unset(data, tmp->token);
 		tmp = tmp->next;

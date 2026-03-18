@@ -21,7 +21,10 @@ void	unset_export_error(char *token, int *exit_status, char *cmd)
 	char	*tmp1;
 	char	*err_msg;
 
-	tmp1 = ft_strjoin("minishell: %d: `", cmd, token);
+	if (ft_strncmp(cmd, "export", 7) == 0)
+		tmp1 = ft_strjoin("minishell: export: `", token);
+	else
+		tmp1 = ft_strjoin("minishell: unset: `", token);
 	err_msg = ft_strjoin(tmp1, "': not a valid identifier\n");
 	ft_putstr_fd(err_msg, 2);
 	free(tmp1);

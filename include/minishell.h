@@ -171,6 +171,7 @@ bool	quote_error(t_quote_state *state);
 */
 void	print_tokens(t_token *head);
 bool	is_separator(char c);
+void	skip_separators(char *input, int *index);
 void	check_for_pipe(t_token *head, char **envp);
 void	update_quote_state(char c, t_quote_state *state);
 char	*free_vars(char	*a, char *b, char *c);

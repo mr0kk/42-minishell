@@ -12,62 +12,24 @@
 
 #include "minishell.h"
 
-void	add_env(t_data *data, char **envp)
+static char	*read_operator_token(char *input, int *index)
 {
-	int	i;
-	int	j;
+	int		start;
 
-	i = 0;
-	while (envp && envp[i] != NULL)
-		i++;
-	if (getenv("USER") == NULL)
-		i++;
-	data->envp = ft_calloc(i + 1, sizeof * data->envp);
-	if (!data->envp)
-		exit_shell("Memory allocation error");
-	j = 0;
-	while (envp && envp[j])
-	{
-		data->envp[j] = ft_strdup(envp[j]);
-		if (!data->envp[j])
-			exit_shell("Memory allocation error");
-		j++;
-	}
-	if (getenv("USER") == NULL)
-		data->envp[j] = ft_strdup("USER=guest");
-}
-
-/*
-	function iterates throught separators to skip them
-*/
-void	skip_separators(char *input, int *index)
-{
-	while (input[*index] && is_separator(input[*index]))
+	start = *index;
+	(*index)++;
+	if ((input[start] == '<' && input[*index] == '<')
+		|| (input[start] == '>' && input[*index] == '>'))
 		(*index)++;
+	return (ft_substr(input, start, *index - start));
 }
 
-/*
-	function separates first met token from given string
-	and updates index variable for next index after token
-	return token string
-*/
-char	*read_token(char *input, int *index)
+static char	*read_word_token(char *input, int *index)
 {
 	int		start;
 	char	quote_type;
 
-	skip_separators(input, index);
-	if (!input[*index])
-		return (NULL);
 	start = *index;
-	if (ft_strchr("<>|", input[start]))
-	{
-		(*index)++;
-		if ((input[start] == '<' && input[*index] == '<')
-			|| (input[start] == '>' && input[*index] == '>'))
-			(*index)++;
-		return (ft_substr(input, start, *index - start));
-	}
 	quote_type = 0;
 	while (input[*index])
 	{
@@ -86,6 +48,16 @@ char	*read_token(char *input, int *index)
 	if (*index - start == 0)
 		return (NULL);
 	return (ft_substr(input, start, *index - start));
+}
+
+char	*read_token(char *input, int *index)
+{
+	skip_separators(input, index);
+	if (!input[*index])
+		return (NULL);
+	if (ft_strchr("<>|", input[start]))
+		return (read_operator_token(input, index));
+	return (read_word_token(input, index));
 }
 
 /*
