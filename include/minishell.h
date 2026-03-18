@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajurczyk <ajurczyk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rmrok <rmrok@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/07 13:52:58 by ajurczyk          #+#    #+#             */
-/*   Updated: 2026/03/07 20:35:58 by ajurczyk         ###   ########.fr       */
+/*   Created: 2026/03/18 16:56:10 by rmrok             #+#    #+#             */
+/*   Updated: 2026/03/18 16:56:48 by rmrok            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define PATH 4020
 
 extern int	g_signal_pid;
-// int	g_signal_pid = 0;
+
 /*
 	structures
 */
