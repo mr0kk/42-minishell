@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-bool	is_redir(t_token_type type)
-{
-	return (type == FROM_FILE || type == REPLACE
-		|| type == ADD_END || type == HEREDOC);
-}
-
 char	*return_path(char **env_paths, char *cmd)
 {
 	char	*path;
@@ -88,25 +82,29 @@ char	**get_cmds(t_token *head, int numofcmds, int i)
 	return (cmds);
 }
 
-static int	count_clean_args(char **args)
+static int	process_redir_token(char **args, char **clean, int *i, int *j)
 {
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (args[i])
+	if (!ft_strncmp(args[*i], ">>", 3) || !ft_strncmp(args[*i], ">", 2))
 	{
-		if (!ft_strncmp(args[i], ">>", 3) || !ft_strncmp(args[i], ">", 2)
-			|| !ft_strncmp(args[i], "<", 2))
-			i += 2;
-		else
-		{
-			count++;
-			i++;
-		}
+		*i = redir_add_replace(args, *i);
+		if (*i == -1)
+			return (-1);
 	}
-	return (count);
+	else if (!ft_strncmp(args[*i], "<", 2))
+	{
+		*i = redir_from_file(args, *i);
+		if (*i == -1)
+			return (-1);
+	}
+	else
+	{
+		clean[*j] = ft_strdup(args[*i]);
+		if (!clean[*j])
+			return (-1);
+		(*j)++;
+		(*i)++;
+	}
+	return (0);
 }
 
 char	**handle_redirections(char **args)
@@ -122,20 +120,8 @@ char	**handle_redirections(char **args)
 	j = 0;
 	while (args[i])
 	{
-		if (!ft_strncmp(args[i], ">>", 3) || !ft_strncmp(args[i], ">", 2))
-		{
-			i = redir_add_replace(args, i);
-			if (i == -1)
-				return (free_string_array(clean), NULL);
-		}
-		else if (!ft_strncmp(args[i], "<", 2))
-		{
-			i = redir_from_file(args, i);
-			if (i == -1)
-				return (free_string_array(clean), NULL);
-		}
-		else
-			clean[j++] = ft_strdup(args[i++]);
+		if (process_redir_token(args, clean, &i, &j) == -1)
+			return (free_string_array(clean), NULL);
 	}
 	return (clean);
 }

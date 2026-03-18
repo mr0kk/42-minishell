@@ -62,15 +62,7 @@ static char	*get_valid_path(char **clean_args, char **envp)
 	{
 		path = ft_strdup(clean_args[0]);
 		if (access(path, F_OK) != 0)
-		{
-			tmp = ft_strjoin("minishell: ", path);
-			err_msg = ft_strjoin(tmp, ": No such file or directory\n");
-			ft_putstr_fd(err_msg, 2);
-			free(tmp);
-			free(err_msg);
-			free(path);
-			return (NULL);
-		}
+			handle_nofile(path);
 	}
 	else
 	{
@@ -87,60 +79,29 @@ static char	*get_valid_path(char **clean_args, char **envp)
 	return (path);
 }
 
-static char	**prepare_args(char *av)
+int	handle_path(char **clean_args, char **envp)
 {
-	char	**args;
-	char	**clean_args;
+	char	*path;
 
-	if (!av || !av[0])
-		return (NULL);
-	args = split_quotes(av);
-	if (!*args)
-		exit_shell("Memory allocation error");
-	if (!(*args)[0])
+	path = get_valid_path(clean_args, envp);
+	if (!path)
 	{
-		free_string_array(args);
-		return (NULL);
+		free_string_array(clean_args);
+		return (127);
 	}
-	clean_args = handle_redirections(args);
-	if (!clean_args || !clean_args[0])
+	if (execve(path, clean_args, envp) == -1)
 	{
-		free_2arrays_and_str(args, clean_args, NULL);
-		return (NULL);
+		perror("minishell");
+		free_string_array(clean_args);
+		free(path);
+		return (126);
 	}
-	free_string_array(args);
-	return (clean_args);
-}
-
-static t_token	*argv_to_token_list(char **argv)
-{
-	t_token	*head;
-	t_token	*curr;
-	int		i;
-
-	head = NULL;
-	i = 0;
-	if (!argv || !argv[0])
-		return (NULL);
-	while (argv[i])
-		add_node(&head, argv[i++]);
-	if (head)
-	{
-		head->type = CMD;
-		curr = head->next;
-		while (curr)
-		{
-			curr->type = ARG;
-			curr = curr->next;
-		}
-	}
-	return (head);
+	return (0);
 }
 
 int	exec_cmd(char *av, char **envp, t_data *data)
 {
 	char	**clean_args;
-	char	*path;
 	t_token	*temp_list;
 	int		exit_code;
 
@@ -157,18 +118,5 @@ int	exec_cmd(char *av, char **envp, t_data *data)
 		return (exit_code);
 	}
 	free_tokens(&temp_list);
-	path = get_valid_path(clean_args, envp);
-	if (!path)
-	{
-		free_string_array(clean_args);
-		return (127);
-	}
-	if (execve(path, clean_args, envp) == -1)
-	{
-		perror("minishell");
-		free_string_array(clean_args);
-		free(path);
-		return (126);
-	}
-	return (0);
+	return (handle_path(clean_args, envp));
 }

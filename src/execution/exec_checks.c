@@ -15,26 +15,9 @@
 static int	setup_redir_fd(t_token *curr)
 {
 	int	fd;
-	int	flags;
 
 	if (curr->type == REPLACE || curr->type == ADD_END)
-	{
-		flags = O_WRONLY | O_CREAT;
-		if (curr->type == REPLACE)
-			flags |= O_TRUNC;
-		else
-			flags |= O_APPEND;
-		fd = open(curr->next->token, flags, 0644);
-		if (fd == -1)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			perror(curr->next->token);
-			return (1);
-		}
-		if (dup2(fd, STDOUT_FILENO) == -1)
-			return (perror("minishell: dup2"), 1);
-		close(fd);
-	}
+		return (replace_add_setup(curr, &fd));
 	else if (curr->type == FROM_FILE)
 	{
 		fd = open(curr->next->token, O_RDONLY);
@@ -100,18 +83,12 @@ void	check_for_buildins(t_token *head, t_data *data)
 		stdin_backup = dup(STDIN_FILENO);
 		if (apply_redirections(head) != 0)
 		{
-			dup2(stdin_backup, STDIN_FILENO);
-			dup2(stdout_backup, STDOUT_FILENO);
-			close(stdin_backup);
-			close(stdout_backup);
+			dup2_and_close(stdin_backup, stdout_backup);
 			return ;
 		}
 		exit_code = run_correct_cmd(head, data);
 		data->last_exit_code = exit_code;
-		dup2(stdin_backup, STDIN_FILENO);
-		dup2(stdout_backup, STDOUT_FILENO);
-		close(stdin_backup);
-		close(stdout_backup);
+		dup2_and_close(stdin_backup, stdout_backup);
 	}
 	else
 		exec_single_command(head, data);

@@ -55,7 +55,7 @@ char	*read_token(char *input, int *index)
 	skip_separators(input, index);
 	if (!input[*index])
 		return (NULL);
-	if (ft_strchr("<>|", input[start]))
+	if (ft_strchr("<>|", input[*index]))
 		return (read_operator_token(input, index));
 	return (read_word_token(input, index));
 }

@@ -135,6 +135,7 @@ void	default_signals_in_child(void);
 void	handle_signals(int sig);
 void	init_signals(void);
 bool	is_redir(t_token_type type);
+int		count_clean_args(char **args);
 char	**handle_redirections(char **args);
 void	exec_single_command(t_token *head, t_data *data);
 void	exec_single_command(t_token *head, t_data *data);
@@ -143,6 +144,11 @@ void	child_process(int i, int (*fd)[2], t_exec *exec, t_data *data);
 void	setup_child_pipes(int i, int (*fd)[2], t_exec *exec);
 void	wait_single_child(pid_t pid, t_data *data);
 char	**split_quotes(char const *s);
+t_token	*argv_to_token_list(char **argv);
+char	**prepare_args(char *av);
+char	*handle_nofile(char *path);
+int		replace_add_setup(t_token *curr, int *fd);
+void	dup2_and_close(int stdin_backup, int stdout_backup);
 
 /*
 	redirections
