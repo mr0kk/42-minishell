@@ -32,10 +32,32 @@ static int	is_numeric(const char *str)
 	return (1);
 }
 
+static void	cleanup_and_exit(t_data *data, int exit_code, bool is_piped)
+{
+	if (!is_piped)
+	{
+		free_all(data);
+		rl_clear_history();
+	}
+	exit(exit_code);
+}
+
+static void	exit_numeric_error(t_data *data, char *arg_token, bool is_piped)
+{
+	char	*tmp;
+	char	*err_msg;
+
+	tmp = ft_strjoin("minishell: exit: ", arg_token);
+	err_msg = ft_strjoin(tmp, ": numeric argument required\n");
+	ft_putstr_fd(err_msg, 2);
+	free(tmp);
+	free(err_msg);
+	cleanup_and_exit(data, 255, is_piped);
+}
+
 int	cmd_exit(t_token *head, t_data *data)
 {
 	t_token	*arg;
-	int		exit_code;
 	bool	is_piped;
 
 	is_piped = (check_for_pipes(data->head) > 0);
@@ -43,39 +65,14 @@ int	cmd_exit(t_token *head, t_data *data)
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
 	arg = head->next;
 	if (!arg)
-	{
-		exit_code = data->last_exit_code;
-		if (!is_piped)
-		{
-			free_all(data);
-			rl_clear_history();
-		}
-		exit(exit_code);
-	}
+		cleanup_and_exit(data, data->last_exit_code, is_piped);
 	if (!is_numeric(arg->token))
-	{
-		char *tmp = ft_strjoin("minishell: exit: ", arg->token);
-		char *err_msg = ft_strjoin(tmp, ": numeric argument required\n");
-		ft_putstr_fd(err_msg, 2);
-		free(tmp);
-		free(err_msg);
-		if (!is_piped)
-		{
-			free_all(data);
-			rl_clear_history();
-		}
-		exit(255);
-	}
+		exit_numeric_error(data, arg->token, is_piped);
 	if (arg->next)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
-	exit_code = ft_atoi(arg->token);
-	if (!is_piped)
-	{
-		free_all(data);
-		rl_clear_history();
-	}
-	exit((unsigned char)exit_code);
+	cleanup_and_exit(data, (unsigned char)ft_atoi(arg->token), is_piped);
+	return (0);
 }

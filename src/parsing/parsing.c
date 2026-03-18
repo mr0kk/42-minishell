@@ -133,7 +133,7 @@ void	input_handler(t_data *data)
 		data->last_exit_code = 130;
 		free_tokens(&(data->head));
 		data->head = NULL;
-		return ;	
+		return ;
 	}
 	start_execution(data->head, data);
 	unlink(".heredoc_tmp");

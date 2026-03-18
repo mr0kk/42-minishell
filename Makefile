@@ -23,6 +23,7 @@ SRC = main.c \
 		commands/cmd_export.c \
 		commands/cmd_pwd.c \
 		commands/cmd_unset.c \
+		commands/cmd_utils.c \
 		execution/signals.c \
 		execution/exec.c \
 		execution/exec_cmd.c \

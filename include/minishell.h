@@ -112,6 +112,11 @@ int		cmd_pwd(t_token *head);
 int		cmd_unset(t_token *head, t_data *data);
 int		run_correct_cmd(t_token *head, t_data *data);
 int		exec_cmd(char *av, char **envp, t_data *data);
+bool	is_valid_identifier(char *var);
+void	unset_export_error(char *token, int *exit_status, char *cmd);
+void	sort_string_array(char **arr, int count);
+void	print_single_export_line(char *env_var);
+void	print_export(t_data *data);
 
 /*
 	execution

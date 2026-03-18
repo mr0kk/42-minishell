@@ -12,22 +12,6 @@
 
 #include "minishell.h"
 
-static bool	is_valid_identifier(char *var)
-{
-	int	i;
-
-	i = 0;
-	if (!var || (!ft_isalpha(var[0]) && var[0] != '_'))
-		return (false);
-	while (var[i])
-	{
-		if (!ft_isalnum(var[i]) && var[i] != '_')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
 static int	get_var_index(char **envp, char *var)
 {
 	int		i;
@@ -71,10 +55,18 @@ static void	remove_env_var(t_data *data, int idx_to_remove)
 	data->envp = new_envp;
 }
 
+static void	handle_valid_unset(t_data *data, char *token)
+{
+	int	i;
+
+	i = get_var_index(data->envp, token);
+	if (i != -1)
+		remove_env_var(data, i);
+}
+
 int	cmd_unset(t_token *head, t_data *data)
 {
 	t_token	*tmp;
-	int		i;
 	int		exit_status;
 
 	exit_status = 0;
@@ -82,20 +74,9 @@ int	cmd_unset(t_token *head, t_data *data)
 	while (tmp)
 	{
 		if (!is_valid_identifier(tmp->token))
-		{
-			char *tmp1 = ft_strjoin("minishell: unset: `", tmp->token);
-			char *err_msg = ft_strjoin(tmp1, "': not a valid identifier\n");
-			ft_putstr_fd(err_msg, 2);
-			free(tmp1);
-			free(err_msg);
-			exit_status = 1;
-		}
+			unset_expoert_error(tmp->token, &exit_status, "unset");
 		else
-		{
-			i = get_var_index(data->envp, tmp->token);
-			if (i != -1)
-				remove_env_var(data, i);
-		}
+			handle_valid_unset(data, tmp->token);
 		tmp = tmp->next;
 	}
 	return (exit_status);
